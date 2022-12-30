@@ -25,6 +25,7 @@ dependencies:
 - wai-logger
 - warp
 - http-types
+- http-api-data
 - servant
 - servant-server
 - aeson
