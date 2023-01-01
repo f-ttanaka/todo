@@ -3,14 +3,14 @@ import styles from '../styles/Home.module.css'
 import React, { useState } from 'react'
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://127.0.0.1:3100/todo`, {method: 'GET'})
+  const res = await fetch(`http://127.0.0.1:3100/api/todo`, {method: 'GET'})
   const data = await res.json()
 
   return { props: { data } }
 }
 
-export function postAPI(props, text) {
-  const res = fetch(`http://127.0.0.1:3100/todo`, {
+export function postAPI(props,text) {
+  const res = fetch(`http://127.0.0.1:3100/api/todo`, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -23,7 +23,7 @@ export function postAPI(props, text) {
 }
 
 export function deleteAPI(n) {
-  const res = fetch(`http://127.0.0.1:3100/todo/${n}`, {
+  const res = fetch(`http://127.0.0.1:3100/api/todo/${n}`, {
     method: 'DELETE',
     mode: 'cors',
     headers: {
@@ -34,14 +34,26 @@ export function deleteAPI(n) {
   return res;
 }
 
-export function putAPI(n,text) {
-  const res = fetch(`http://127.0.0.1:3100/todo/`, {
+export function updateAPI(n,text) {
+  const res = fetch(`http://127.0.0.1:3100/api/todo/comment`, {
     method: 'PUT',
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({id: n, comment: text})
+  })
+
+  return res;
+}
+
+export function serializeAPI() {
+  const res = fetch(`http://127.0.0.1:3100/api/todo/ids`, {
+    method: 'PUT',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
 
   return res;
@@ -57,7 +69,7 @@ export default function Home(props) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const postResponse = await postAPI(props, todo);
+    const postResponse = await postAPI(props,todo);
     console.log(postResponse);
     window.location.reload();
   }
@@ -69,13 +81,14 @@ export default function Home(props) {
   async function handleDelete(e,n) {
     e.preventDefault();
     const deleteResponse = await deleteAPI(n);
+    const serializeResponse = await serializeAPI();
     console.log(deleteResponse);
     window.location.reload();
   }
 
   async function handlePut(e,n,text) {
     e.preventDefault();
-    const putResponse = await putAPI(n,text);
+    const putResponse = await updateAPI(n,text);
     console.log(putResponse);
     window.location.reload();
   }
