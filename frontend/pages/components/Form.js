@@ -28,6 +28,8 @@ export default function Form(props) {
         autoComplete="off"
         value={name}
         onChange={handleChange}
+        minLength={1} required
+        maxLength={50}
       />
       <button type="submit" className="btn btn__primary btn__lg">
         Add

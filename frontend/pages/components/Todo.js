@@ -36,6 +36,7 @@ export default function Todo(props) {
           type="text"
           value={newName}
           onChange={handleChange}
+          minLength={1} required
         />
       </div>
       <div className="btn-group">

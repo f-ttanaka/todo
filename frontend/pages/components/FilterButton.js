@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-
 export default function FilterButton(props) {
-
   return (
     <button
       type="button"
