@@ -28,41 +28,44 @@ connectInfo = ConnectInfo
     }
 
 initDB :: Connection -> IO Int64
-initDB conn = execute_ conn "CREATE TABLE IF NOT EXISTS todos (id integer, comment varchar(100))"
+initDB conn =
+  execute_ conn "CREATE TABLE IF NOT EXISTS todos \
+                \ (id serial NOT NULL, title varchar(100) NOT NULL, completed boolean NOT NULL)"
 
 data Todo = Todo
   { id :: Int
-  , comment :: String
+  , title :: String
+  , completed :: Bool
   } deriving (Show, Generic)
 
 instance ToJSON Todo
 instance FromJSON Todo
 
 instance FromRow Todo where
-  fromRow = Todo <$> field <*> field
+  fromRow = Todo <$> field <*> field <*> field
 
 type API = "api" :> "todo" :> ReqBody '[JSON] Todo :> Post '[JSON] NoContent
   :<|> "api" :> "todo" :> Get '[JSON] [Todo]
   :<|> "api" :> "todo" :> Capture "id" Int :> Delete '[JSON] NoContent
-  :<|> "api" :> "todo" :> "comment" :> ReqBody '[JSON] Todo :> Put '[JSON] NoContent
-  :<|> "api" :> "todo" :> "ids" :> Put '[JSON] NoContent
+  :<|> "api" :> "todo" :> "title" :> ReqBody '[JSON] Todo :> Put '[JSON] NoContent
+  :<|> "api" :> "todo" :> "state" :> Capture "id" Int :> Put '[JSON] NoContent
 
 api :: Proxy API
 api = Proxy
 
 server :: ConnectInfo -> Server API
-server ci = postTodo :<|> getTodo :<|> deleteTodo :<|> putCommentTodo :<|> putIdsTodo
+server ci = postTodo :<|> getTodo :<|> deleteTodo :<|> updateTitle :<|> updateState
   where
     postTodo :: Todo -> Handler NoContent
-    postTodo (Todo n txt) = do
+    postTodo (Todo _ txt _) = do
       liftIO . withConnect ci $ \conn ->
-        execute conn "INSERT INTO todos VALUES (?,?)" (n, txt)
+        execute conn "INSERT INTO todos (title, completed) VALUES (?, false)" (Only txt)
       return NoContent
 
     getTodo :: Handler [Todo]
-    getTodo = fmap (map (\(n,txt) -> Todo n txt)) . liftIO $
+    getTodo = fmap (map (\(n,txt,c) -> Todo n txt c)) . liftIO $
      withConnect ci $ \conn ->
-        query_ conn "SELECT id,comment FROM todos"
+        query_ conn "SELECT id, title, completed FROM todos"
 
     deleteTodo :: Int -> Handler NoContent
     deleteTodo n = do
@@ -70,22 +73,16 @@ server ci = postTodo :<|> getTodo :<|> deleteTodo :<|> putCommentTodo :<|> putId
         execute conn "DELETE FROM todos WHERE id = ?" (Only n)
       return NoContent
 
-    putCommentTodo :: Todo -> Handler NoContent
-    putCommentTodo (Todo n txt) = do
+    updateTitle :: Todo -> Handler NoContent
+    updateTitle (Todo n txt _) = do
       liftIO . withConnect ci $ \conn ->
-        execute conn "UPDATE todos SET comment = ? \
-                      \ FROM \
-                      \    WHERE id = ?" (txt,n)
+        execute conn "UPDATE todos SET title = ? WHERE id = ?" (txt,n)
       return NoContent
     
-    putIdsTodo :: Handler NoContent
-    putIdsTodo = do
+    updateState :: Int -> Handler NoContent
+    updateState n = do
       liftIO . withConnect ci $ \conn ->
-        execute_ conn "UPDATE todos SET id = tmp.new_id \
-                      \  FROM \
-                      \    (SELECT row_number() over() as new_id, id, comment FROM todos) as tmp \
-                      \  WHERE \
-                      \    todos.id = tmp.id"
+        execute conn "UPDATE todos SET completed = not(completed) WHERE id = ?" (Only n)
       return NoContent
 
 withConnect :: ConnectInfo -> (Connection -> IO c) -> IO c

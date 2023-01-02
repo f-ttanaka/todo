@@ -1,139 +1,119 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import React, { useState } from 'react'
+import Todo from './components/Todo'
+import Form from './components/Form'
+import FilterButton from './components/FilterButton'
+
+const FILTER_MAP = {
+  All: () => true,
+  Active: (task) => !task.completed,
+  Completed: (task) => task.completed
+};
+const FILTER_NAMES = Object.keys(FILTER_MAP);
+
+const URL = 'http://127.0.0.1:3100/api/todo'
+const updateTitleURL = URL + '/title'
+const updateStateURL = URL + '/state'
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://127.0.0.1:3100/api/todo`, {method: 'GET'})
+  const res = await fetch(URL, {method: 'GET'})
   const data = await res.json()
 
   return { props: { data } }
 }
 
-export function postAPI(props,text) {
-  const res = fetch(`http://127.0.0.1:3100/api/todo`, {
+export default function Home (props) {
+  function postReq(name) {
+    const res = fetch(URL, {
       method: 'POST',
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({id: props.data.length + 1, comment: text})
-  });
-
-  return res;
-}
-
-export function deleteAPI(n) {
-  const res = fetch(`http://127.0.0.1:3100/api/todo/${n}`, {
-    method: 'DELETE',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-
-  return res;
-}
-
-export function updateAPI(n,text) {
-  const res = fetch(`http://127.0.0.1:3100/api/todo/comment`, {
-    method: 'PUT',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({id: n, comment: text})
-  })
-
-  return res;
-}
-
-export function serializeAPI() {
-  const res = fetch(`http://127.0.0.1:3100/api/todo/ids`, {
-    method: 'PUT',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-
-  return res;
-}
-
-export default function Home(props) {
-  const tableDefine = [
-    {label: 'id', key: 'id'},
-    {label: 'comment', key: 'comment'}
-  ];
-
-  const [todo, setTodo] = useState("");
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const postResponse = await postAPI(props,todo);
-    console.log(postResponse);
-    window.location.reload();
+      body: JSON.stringify({id: 0, title: name, completed: false})
+    });
+    return res;
+  }
+    
+  function deleteReq(n) {
+    const res = fetch(URL + '/' + n, {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  
+    return res;
   }
 
-  function handleChangeSubmit(e) {
-    setTodo(e.target.value)
+  function updateTitleReq(n,text) {
+    const res = fetch(updateTitleURL, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({id: n, title: text, completed: false})
+    })
+  
+    return res;
   }
 
-  async function handleDelete(e,n) {
-    e.preventDefault();
-    const deleteResponse = await deleteAPI(n);
-    const serializeResponse = await serializeAPI();
-    console.log(deleteResponse);
-    window.location.reload();
+  function updateStateReq(n) {
+    const res = fetch(updateStateURL + '/' + n, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  
+    return res;
   }
 
-  async function handlePut(e,n,text) {
-    e.preventDefault();
-    const putResponse = await updateAPI(n,text);
-    console.log(putResponse);
-    window.location.reload();
-  }
+  
+  const [filter, setFilter] = useState('All');
+
+  const filterList = FILTER_NAMES.map((name) => (
+    <FilterButton
+      key={name}
+      name={name}
+      isPressed={name === filter}
+      setFilter={setFilter}
+    />
+  ));
+
+  const taskList = props.data
+    .filter(FILTER_MAP[filter])
+    .map((task) => (
+    <Todo
+      id={task.id}
+      name={task.title}
+      key={task.id}
+      completed={task.completed}
+      deleteTask={deleteReq}
+      editTask={updateTitleReq}
+      editState={updateStateReq}
+    />
+  ));
 
   return (
-    <>
-      <Head>
-        <title>Todo</title>
-        <meta name="description" content="Todo application" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className={styles.main}>
-        <div className={styles.center}>
-          <table>
-            <thead>
-              <tr>
-                {tableDefine.map((def) => (
-                  <th>{def.label}</th>
-                ))}
-                <th>-</th>
-                <th>-</th>
-              </tr>
-            </thead>
-            <tbody>
-                {props.data.map((row) => (
-                  <tr>
-                    <th key={row.id}>{row.id}</th>
-                    <td key={row.comment}>{row.comment}</td>
-                    <td> <button onClick={(e) => handleDelete(e,row.id)}>削除</button></td>
-                    <td> <button onClick={(e) => handlePut(e,row.id, '編集テスト')}>編集</button> </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className={styles.center}>
-        <h2>新しいTodoの追加</h2>
-          <form onSubmit={handleSubmit}>
-            内容 <input id="newTodo" name="newTodo" value={todo} onChange={handleChangeSubmit} type="text"/>
-            <button type="submit">追加</button>
-          </form>
-        </div>
-      </main>
-    </>
-  )
+    <div className="todoapp stack-large">
+      <h1>TodoMatic</h1>
+      <Form addTask={postReq} />
+      <div className="filters btn-group stack-exception">
+        {filterList}
+      </div>
+      <h2 id="list-heading">
+        {taskList.length} tasks remaining
+      </h2>
+      <ul
+        role="list"
+        className="todo-list stack-large stack-exception"
+        aria-labelledby="list-heading"
+      >
+        {taskList.sort((a,b) => a.key - b.key)}
+      </ul>
+    </div>
+  );
 }
