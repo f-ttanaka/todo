@@ -37,6 +37,7 @@ export default function Todo(props) {
           value={newName}
           onChange={handleChange}
           minLength={1} required
+          maxLength={50}
         />
       </div>
       <div className="btn-group">
@@ -68,7 +69,7 @@ export default function Todo(props) {
         </div>
         <div className="btn-group">
           <button type="button" className="btn" onClick={handleState} >
-            {props.completed ? 'Incompleted' : 'Completed'}
+            Change State
           </button>
           <button type="button" className="btn" onClick={() => setEditing(true)}>
             Edit <span className="visually-hidden">{props.name}</span>

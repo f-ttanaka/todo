@@ -1,0 +1,11 @@
+version: '3'
+services:
+  db:
+    container_name: abcd1234
+    image: postgres
+    build: .
+    ports:
+      - 5430:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
