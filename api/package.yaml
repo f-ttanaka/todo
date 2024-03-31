@@ -30,9 +30,15 @@ dependencies:
 - servant
 - servant-server
 - aeson
-- bytestring
-- postgresql-simple
 - mtl
+- hasql
+- hasql-th
+- hasql-transaction
+- hasql-migration
+- vector
+- profunctors
+- text
+- uuid
 
 ghc-options:
 - -Wall
@@ -69,3 +75,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - api
+
+default-extensions:
+  - OverloadedStrings
+  - QuasiQuotes

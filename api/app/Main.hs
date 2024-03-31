@@ -1,6 +1,11 @@
 module Main (main) where
 
-import Todo
+import Application (application)
+
+import Network.Wai.Logger
+import Network.Wai.Handler.Warp
 
 main :: IO ()
-main = runServant
+main = withStdoutLogger $ \aplogger -> do
+  let settings = setPort 3100 (setLogger aplogger defaultSettings)
+  runSettings settings application

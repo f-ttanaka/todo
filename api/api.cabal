@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.0.
+-- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -25,22 +25,36 @@ source-repository head
 
 library
   exposed-modules:
-      Todo
+      Application
+      Handlers.Todo
+      Middlewares.Cors
+      Queries.Common
+      Queries.Todo
+      Types.Todo
   other-modules:
       Paths_api
   hs-source-dirs:
       src
+  default-extensions:
+      OverloadedStrings
+      QuasiQuotes
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       aeson
     , base >=4.7 && <5
-    , bytestring
+    , hasql
+    , hasql-migration
+    , hasql-th
+    , hasql-transaction
     , http-api-data
     , http-types
     , mtl
-    , postgresql-simple
+    , profunctors
     , servant
     , servant-server
+    , text
+    , uuid
+    , vector
     , wai
     , wai-cors
     , wai-logger
@@ -50,21 +64,31 @@ library
 executable api-exe
   main-is: Main.hs
   other-modules:
+      Dev
       Paths_api
   hs-source-dirs:
       app
+  default-extensions:
+      OverloadedStrings
+      QuasiQuotes
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , api
     , base >=4.7 && <5
-    , bytestring
+    , hasql
+    , hasql-migration
+    , hasql-th
+    , hasql-transaction
     , http-api-data
     , http-types
     , mtl
-    , postgresql-simple
+    , profunctors
     , servant
     , servant-server
+    , text
+    , uuid
+    , vector
     , wai
     , wai-cors
     , wai-logger
@@ -78,18 +102,27 @@ test-suite api-test
       Paths_api
   hs-source-dirs:
       test
+  default-extensions:
+      OverloadedStrings
+      QuasiQuotes
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , api
     , base >=4.7 && <5
-    , bytestring
+    , hasql
+    , hasql-migration
+    , hasql-th
+    , hasql-transaction
     , http-api-data
     , http-types
     , mtl
-    , postgresql-simple
+    , profunctors
     , servant
     , servant-server
+    , text
+    , uuid
+    , vector
     , wai
     , wai-cors
     , wai-logger
