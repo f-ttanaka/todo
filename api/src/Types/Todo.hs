@@ -6,7 +6,7 @@ import Data.Aeson(ToJSON,FromJSON)
 import Data.UUID (UUID)
 
 data Todo = Todo
-  { id :: UUID
+  { uuid :: UUID
   , title :: Text
   , completed :: Bool
   } deriving (Show, Generic)

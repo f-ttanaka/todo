@@ -1,19 +1,15 @@
-type ButtonProps = JSX.IntrinsicElements["button"] & {
-  label : string
-};
+type ButtonProps = JSX.IntrinsicElements['button'] & {
+  label: string
+}
 
 const FilterButton = (props: ButtonProps) => {
   return (
-    <button
-      {...props}
-      type="button"
-      className="border border-[#d3d3d3]"
-    >
-      <span className="absolute h-[1px] w-[1px] overflow-hidden whitespace-nowrap">Show </span>
+    <button {...props} type='button' className='border border-[#d3d3d3] bg-green-100 w-full'>
+      <span className='absolute h-[1px] w-[1px] overflow-hidden whitespace-nowrap'>Show </span>
       <span>{props.label}</span>
-      <span className="absolute h-[1px] w-[1px] overflow-hidden whitespace-nowrap"> tasks</span>
+      <span className='absolute h-[1px] w-[1px] overflow-hidden whitespace-nowrap'> tasks</span>
     </button>
-  );
+  )
 }
 
 export default FilterButton
