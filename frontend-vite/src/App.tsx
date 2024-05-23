@@ -1,34 +1,79 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { TodoList } from './components/TodoList';
+import { AddTodoForm } from './components/AddTodoForm';
+import { dummyTodoList } from './data/dummyTodoList';
+import { TodoSummary } from './components/TodoSummary';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [todoList, setTodoList] = useState(dummyTodoList);
+
+  // 対象のTodoの完了を変更
+  const changeCompleted = (id: number) => {
+    // 変更前のTodoリストが引数として呼び出せる
+    setTodoList((prevTodoList) => {
+      return prevTodoList.map((todo) => {
+        // 対象のidなら、completedを変更
+        if (todo.id === id) {
+          return {
+            ...todo,
+            completed: !todo.completed,
+          };
+        }
+
+        // それ以外のtodoなら、そのまま返す
+        return todo;
+      });
+    });
+  };
+
+  const addTodo = (title: string) => {
+    setTodoList((prevTodoList) => {
+      // 新しいTodoを作成
+      const newTodo = {
+        id: Date.now(),
+        title,
+        completed: false,
+      };
+
+      // 変更前のTodoリストと合わせる
+      return [newTodo, ...prevTodoList];
+    });
+  };
+
+  const deleteTodo = (id: number) => {
+    setTodoList((prevTodoList) => {
+      // 対象のidでないTodoを残す
+      return prevTodoList.filter((todo) => {
+        return todo.id !== id;
+      });
+    });
+  };
+
+  // 完了したTodoをすべて削除
+  const deleteAllCompleted = () => {
+    setTodoList((prevTodoList) => {
+      // 完了していないTodoを残す
+      return prevTodoList.filter((todo) => {
+        return !todo.completed;
+      });
+    });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className="mx-auto mt-10 max-w-xl space-y-10">
+      <h1 className="text-center text-4xl">Todoアプリ</h1>
+      <div className="space-y-5">
+        <AddTodoForm addTodo={addTodo} />
+        <div className="space-y-5 rounded bg-slate-200 p-5">
+          <TodoList
+            todoList={todoList}
+            changeCompleted={changeCompleted}
+            deleteTodo={deleteTodo}
+          />
+          <TodoSummary deleteAllCompleted={deleteAllCompleted} />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </main>
   );
 }
 
