@@ -1,4 +1,4 @@
-import { useCreateTodo } from '@/hooks/api'
+import { useCreateTodo } from '../hooks/api'
 import React, { useState } from 'react'
 
 const Form = () => {
@@ -8,27 +8,26 @@ const Form = () => {
 
   return (
     <form onSubmit={create}>
-      <div className='flex flex-col'>
-        <label htmlFor={inputId} className='text-xl'>
+      <h2 className='label-wrapper'>
+        <label htmlFor={inputId} className='label__lg'>
           What needs to be done?
         </label>
-        <div className='flex gap-2 p-2'>
-          <input
-            type='text'
-            id={inputId}
-            name='text'
-            autoComplete='off'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            minLength={1}
-            required
-            maxLength={50}
-          />
-          <button type='submit' className='bg-blue-50'>
-            Add
-          </button>
-        </div>
-      </div>
+      </h2>
+      <input
+        type='text'
+        className='input input__lg'
+        id={inputId}
+        name='text'
+        autoComplete='off'
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        minLength={1}
+        required
+        maxLength={50}
+      />
+      <button type='submit' className='btn btn__primary btn__lg'>
+        Add
+      </button>
     </form>
   )
 }

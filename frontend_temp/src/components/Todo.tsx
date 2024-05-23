@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDeleteTodo, useUpdateState, useUpdateTitle } from '../hooks/api'
+import { useDeleteTodo, useUpdateState, useUpdateTitle } from '@/hooks/api'
 
 type ViewTemplateProps = {
   title: string

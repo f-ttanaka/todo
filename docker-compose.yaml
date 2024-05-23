@@ -1,11 +1,12 @@
 version: '3'
 services:
   db:
-    container_name: abcd1234
+    container_name: postgres
     image: postgres:16
     build: .
     ports:
       - 5430:5432
     environment:
+      POSTGRES_DB: todo-app
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root

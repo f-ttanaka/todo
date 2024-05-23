@@ -7,7 +7,7 @@ import Hasql.Session (Session)
 import qualified Hasql.Session as Session
 
 connectionSettings :: Conn.Settings
-connectionSettings = Conn.settings "localhost" 5430 "root" "root" "todo"
+connectionSettings = Conn.settings "localhost" 5430 "root" "root" "todo-app"
 
 pickRight :: Show e => IO (Either e a) -> IO a
 pickRight m = do
