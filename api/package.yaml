@@ -36,6 +36,7 @@ dependencies:
 - hasql-transaction
 - hasql-migration
 - vector
+- rio
 - profunctors
 - text
 - uuid
@@ -77,5 +78,6 @@ tests:
     - api
 
 default-extensions:
+  - NoImplicitPrelude
   - OverloadedStrings
   - QuasiQuotes

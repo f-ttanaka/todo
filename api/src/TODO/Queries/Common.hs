@@ -1,15 +1,17 @@
-module Queries.Common (
-  createSession
-) where
+module TODO.Queries.Common
+  ( createSession,
+  )
+where
 
 import qualified Hasql.Connection as Conn
 import Hasql.Session (Session)
 import qualified Hasql.Session as Session
+import TODO.Prelude
 
 connectionSettings :: Conn.Settings
 connectionSettings = Conn.settings "localhost" 5430 "root" "root" "todo-app"
 
-pickRight :: Show e => IO (Either e a) -> IO a
+pickRight :: (Show e) => IO (Either e a) -> IO a
 pickRight m = do
   res <- m
   case res of

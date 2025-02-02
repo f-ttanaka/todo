@@ -1,14 +1,12 @@
-module Handlers.Todo where
+module TODO.Handlers.Todo where
 
-import Data.Text (Text)
 import Servant
-import Control.Monad.IO.Class (liftIO)
-
-import Types.Todo (Todo(..), UUID)
-import qualified Queries.Todo as Query
+import TODO.Prelude hiding (Handler)
+import qualified TODO.Queries.Todo as Query
+import TODO.Types.Todo (Todo (..), UUID)
 
 getTodo :: Handler [Todo]
-getTodo =  liftIO Query.fetchAll
+getTodo = liftIO Query.fetchAll
 
 postTodo :: Text -> Handler UUID
 postTodo t = liftIO (Query.insertOne t)

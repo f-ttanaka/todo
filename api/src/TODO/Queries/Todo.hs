@@ -1,12 +1,12 @@
-module Queries.Todo where
+module TODO.Queries.Todo where
 
-import Queries.Common (createSession)
+import Data.Profunctor (rmap)
+import qualified Data.Vector as Vec
 import qualified Hasql.Session as Session
 import qualified Hasql.TH as TH
-import qualified Data.Vector as Vec
-import Data.Profunctor
-import Types.Todo (Todo(..), UUID)
-import Data.Text (Text)
+import TODO.Prelude
+import TODO.Queries.Common (createSession)
+import TODO.Types.Todo (Todo (..), UUID)
 
 fetchAll :: IO [Todo]
 fetchAll = createSession $ fmap Vec.toList $ Session.statement () $ rmap (fmap decode) query
@@ -43,7 +43,7 @@ insertOne text = createSession $ Session.statement text query
       |]
 
 updateTitle :: UUID -> Text -> IO ()
-updateTitle u t = createSession $ Session.statement (u,t) query
+updateTitle u t = createSession $ Session.statement (u, t) query
   where
     query =
       [TH.resultlessStatement|

@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -25,17 +25,19 @@ source-repository head
 
 library
   exposed-modules:
-      Application
-      Handlers.Todo
-      Middlewares.Cors
-      Queries.Common
-      Queries.Todo
-      Types.Todo
+      TODO.Application
+      TODO.Handlers.Todo
+      TODO.Middlewares.Cors
+      TODO.Prelude
+      TODO.Queries.Common
+      TODO.Queries.Todo
+      TODO.Types.Todo
   other-modules:
       Paths_api
   hs-source-dirs:
       src
   default-extensions:
+      NoImplicitPrelude
       OverloadedStrings
       QuasiQuotes
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
@@ -50,6 +52,7 @@ library
     , http-types
     , mtl
     , profunctors
+    , rio
     , servant
     , servant-server
     , text
@@ -69,6 +72,7 @@ executable api-exe
   hs-source-dirs:
       app
   default-extensions:
+      NoImplicitPrelude
       OverloadedStrings
       QuasiQuotes
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
@@ -84,6 +88,7 @@ executable api-exe
     , http-types
     , mtl
     , profunctors
+    , rio
     , servant
     , servant-server
     , text
@@ -103,6 +108,7 @@ test-suite api-test
   hs-source-dirs:
       test
   default-extensions:
+      NoImplicitPrelude
       OverloadedStrings
       QuasiQuotes
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
@@ -118,6 +124,7 @@ test-suite api-test
     , http-types
     , mtl
     , profunctors
+    , rio
     , servant
     , servant-server
     , text
