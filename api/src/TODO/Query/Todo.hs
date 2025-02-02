@@ -1,12 +1,12 @@
-module TODO.Queries.Todo where
+module TODO.Query.Todo where
 
 import Data.Profunctor (rmap)
 import qualified Data.Vector as Vec
 import qualified Hasql.Session as Session
 import qualified Hasql.TH as TH
 import TODO.Prelude
-import TODO.Queries.Common (createSession)
-import TODO.Types.Todo (Todo (..), UUID)
+import TODO.Query.Common (createSession)
+import TODO.Type.Todo (Todo (..), UUID)
 
 fetchAll :: IO [Todo]
 fetchAll = createSession $ fmap Vec.toList $ Session.statement () $ rmap (fmap decode) query

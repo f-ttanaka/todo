@@ -1,4 +1,4 @@
-module TODO.Middlewares.Cors (setCors, Middleware) where
+module TODO.Middleware.Cors (setCors, Middleware) where
 
 import Network.Wai (Middleware)
 import Network.Wai.Middleware.Cors

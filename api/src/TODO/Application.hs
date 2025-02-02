@@ -4,10 +4,10 @@
 module TODO.Application (application) where
 
 import Servant
-import TODO.Handlers.Todo
-import TODO.Middlewares.Cors (Middleware, setCors)
+import TODO.Handler.Todo
+import TODO.Middleware.Cors (Middleware, setCors)
 import TODO.Prelude
-import TODO.Types.Todo (Todo, UUID)
+import TODO.Type.Todo (Todo, UUID)
 
 type API =
   "api" :> "todo" :> Capture "title" Text :> Post '[JSON] UUID

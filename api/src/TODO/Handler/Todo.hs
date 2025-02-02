@@ -1,9 +1,9 @@
-module TODO.Handlers.Todo where
+module TODO.Handler.Todo where
 
 import Servant
 import TODO.Prelude hiding (Handler)
-import qualified TODO.Queries.Todo as Query
-import TODO.Types.Todo (Todo (..), UUID)
+import qualified TODO.Query.Todo as Query
+import TODO.Type.Todo (Todo (..), UUID)
 
 getTodo :: Handler [Todo]
 getTodo = liftIO Query.fetchAll

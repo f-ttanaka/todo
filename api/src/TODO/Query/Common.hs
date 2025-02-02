@@ -1,4 +1,4 @@
-module TODO.Queries.Common
+module TODO.Query.Common
   ( createSession,
   )
 where

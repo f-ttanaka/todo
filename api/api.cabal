@@ -26,12 +26,12 @@ source-repository head
 library
   exposed-modules:
       TODO.Application
-      TODO.Handlers.Todo
-      TODO.Middlewares.Cors
+      TODO.Handler.Todo
+      TODO.Middleware.Cors
       TODO.Prelude
-      TODO.Queries.Common
-      TODO.Queries.Todo
-      TODO.Types.Todo
+      TODO.Query.Common
+      TODO.Query.Todo
+      TODO.Type.Todo
   other-modules:
       Paths_api
   hs-source-dirs:

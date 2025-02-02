@@ -7,7 +7,7 @@ import Network.Wai.Handler.Warp
 import Network.Wai.Logger
 import TODO.Application (application)
 import TODO.Prelude
-import TODO.Queries.Common (createSession)
+import TODO.Query.Common (createSession)
 
 migrate :: IO ()
 migrate = do

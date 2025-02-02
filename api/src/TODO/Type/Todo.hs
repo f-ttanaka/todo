@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module TODO.Types.Todo (Todo (..), UUID) where
+module TODO.Type.Todo (Todo (..), UUID) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.UUID (UUID)
