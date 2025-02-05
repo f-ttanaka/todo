@@ -2,27 +2,27 @@ module TODO.Query.Todo where
 
 import Data.Profunctor (rmap)
 import qualified Data.Vector as Vec
-import qualified Hasql.Session as Session
+import Hasql.Statement (Statement)
 import qualified Hasql.TH as TH
 import TODO.Prelude
-import TODO.Query.Common (createSession)
-import TODO.Type.Todo (Todo (..), UUID)
+import TODO.Type.Todo
 
-fetchAll :: IO [Todo]
-fetchAll = createSession $ fmap Vec.toList $ Session.statement () $ rmap (fmap decode) query
+fetchAll :: Statement () [Todo]
+fetchAll = rmap (Vec.toList . fmap decode) query
   where
     query =
       [TH.vectorStatement|
         select
           uuid :: uuid
+					, user_uuid :: uuid
           , title :: text
           , completed :: boolean
         from todos
       |]
-    decode (u, t, c) = Todo u t c
+    decode (u, uu, t, c) = Todo u uu t c
 
-deleteById :: UUID -> IO Int
-deleteById u = createSession $ fmap fromIntegral $ Session.statement u query
+deleteById :: Statement UUID Int
+deleteById = rmap fromIntegral query
   where
     query =
       [TH.rowsAffectedStatement|
@@ -31,8 +31,8 @@ deleteById u = createSession $ fmap fromIntegral $ Session.statement u query
           uuid = $1 :: uuid
       |]
 
-insertOne :: Text -> IO UUID
-insertOne text = createSession $ Session.statement text query
+insertOne :: Statement Text UUID
+insertOne = query
   where
     query =
       [TH.singletonStatement|
@@ -42,8 +42,8 @@ insertOne text = createSession $ Session.statement text query
         returning uuid :: uuid
       |]
 
-updateTitle :: UUID -> Text -> IO ()
-updateTitle u t = createSession $ Session.statement (u, t) query
+updateTitle :: Statement (UUID, Text) ()
+updateTitle = query
   where
     query =
       [TH.resultlessStatement|
@@ -52,8 +52,8 @@ updateTitle u t = createSession $ Session.statement (u, t) query
         where uuid = $1 :: uuid
       |]
 
-updateStatus :: UUID -> IO ()
-updateStatus u = createSession $ Session.statement u query
+updateStatus :: Statement UUID ()
+updateStatus = query
   where
     query =
       [TH.resultlessStatement|

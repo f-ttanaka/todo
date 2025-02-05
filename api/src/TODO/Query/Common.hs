@@ -1,24 +1,18 @@
 module TODO.Query.Common
-  ( createSession,
+  ( executeQuery,
   )
 where
 
-import qualified Hasql.Connection as Conn
-import Hasql.Session (Session)
+import Hasql.Pool
 import qualified Hasql.Session as Session
+import Hasql.Statement (Statement)
+import TODO.App
 import TODO.Prelude
 
-connectionSettings :: Conn.Settings
-connectionSettings = Conn.settings "localhost" 5430 "root" "root" "todo-app"
-
-pickRight :: (Show e) => IO (Either e a) -> IO a
-pickRight m = do
-  res <- m
-  case res of
-    Right a -> return a
-    Left e -> fail (show e)
-
-createSession :: Session a -> IO a
-createSession ses = do
-  connection <- pickRight $ Conn.acquire connectionSettings
-  pickRight $ Session.run ses connection
+executeQuery :: Statement param res -> param -> App res
+executeQuery query param = do
+  pool <- getDbConnPool
+  resM <- liftIO $ use pool (Session.statement param query)
+  case resM of
+    Right res -> return res
+    Left e -> throwString $ show e

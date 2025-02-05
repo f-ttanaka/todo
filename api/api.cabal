@@ -25,13 +25,20 @@ source-repository head
 
 library
   exposed-modules:
+      TODO.App
       TODO.Application
+      TODO.Application.Server
       TODO.Handler.Todo
+      TODO.Handler.User
+      TODO.Lib.Crypt
+      TODO.Middleware
       TODO.Middleware.Cors
       TODO.Prelude
       TODO.Query.Common
       TODO.Query.Todo
+      TODO.Query.User
       TODO.Type.Todo
+      TODO.Type.User
   other-modules:
       Paths_api
   hs-source-dirs:
@@ -40,12 +47,15 @@ library
       NoImplicitPrelude
       OverloadedStrings
       QuasiQuotes
+      DuplicateRecordFields
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bcrypt
     , hasql
     , hasql-migration
+    , hasql-pool
     , hasql-th
     , hasql-transaction
     , http-api-data
@@ -54,6 +64,7 @@ library
     , profunctors
     , rio
     , servant
+    , servant-auth-server
     , servant-server
     , text
     , uuid
@@ -75,13 +86,16 @@ executable api-exe
       NoImplicitPrelude
       OverloadedStrings
       QuasiQuotes
+      DuplicateRecordFields
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , api
     , base >=4.7 && <5
+    , bcrypt
     , hasql
     , hasql-migration
+    , hasql-pool
     , hasql-th
     , hasql-transaction
     , http-api-data
@@ -90,6 +104,7 @@ executable api-exe
     , profunctors
     , rio
     , servant
+    , servant-auth-server
     , servant-server
     , text
     , uuid
@@ -111,13 +126,16 @@ test-suite api-test
       NoImplicitPrelude
       OverloadedStrings
       QuasiQuotes
+      DuplicateRecordFields
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , api
     , base >=4.7 && <5
+    , bcrypt
     , hasql
     , hasql-migration
+    , hasql-pool
     , hasql-th
     , hasql-transaction
     , http-api-data
@@ -126,6 +144,7 @@ test-suite api-test
     , profunctors
     , rio
     , servant
+    , servant-auth-server
     , servant-server
     , text
     , uuid

@@ -1,13 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module TODO.Type.Todo (Todo (..), UUID) where
+module TODO.Type.Todo (Todo (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
-import Data.UUID (UUID)
 import TODO.Prelude
 
 data Todo = Todo
   { uuid :: UUID,
+    user_uuid :: UUID,
     title :: Text,
     completed :: Bool
   }

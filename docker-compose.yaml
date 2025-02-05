@@ -1,6 +1,6 @@
 version: '3'
 services:
-  db:
+  db-local:
     container_name: postgres
     image: postgres:16
     build: .

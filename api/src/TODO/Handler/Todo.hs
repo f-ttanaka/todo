@@ -1,21 +1,27 @@
 module TODO.Handler.Todo where
 
 import Servant
+import TODO.App
 import TODO.Prelude hiding (Handler)
+import TODO.Query.Common (executeQuery)
 import qualified TODO.Query.Todo as Query
-import TODO.Type.Todo (Todo (..), UUID)
+import TODO.Type.Todo
 
-getTodo :: Handler [Todo]
-getTodo = liftIO Query.fetchAll
+getTodo :: App [Todo]
+getTodo = executeQuery Query.fetchAll ()
 
-postTodo :: Text -> Handler UUID
-postTodo t = liftIO (Query.insertOne t)
+postTodo :: Text -> App UUID
+postTodo = executeQuery Query.insertOne
 
-deleteTodo :: UUID -> Handler Int
-deleteTodo u = liftIO (Query.deleteById u)
+deleteTodo :: UUID -> App Int
+deleteTodo = executeQuery Query.deleteById
 
-updateTitle :: UUID -> Text -> Handler NoContent
-updateTitle u t = liftIO (Query.updateTitle u t >> return NoContent)
+updateTitle :: UUID -> Text -> App NoContent
+updateTitle u t = do
+  executeQuery Query.updateTitle (u, t)
+  return NoContent
 
-updateStatus :: UUID -> Handler NoContent
-updateStatus u = liftIO (Query.updateStatus u >> return NoContent)
+updateStatus :: UUID -> App NoContent
+updateStatus u = do
+  executeQuery Query.updateStatus u
+  return NoContent
