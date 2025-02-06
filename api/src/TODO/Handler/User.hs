@@ -2,7 +2,7 @@
 
 module TODO.Handler.User where
 
-import TODO.App
+import TODO.Common.App
 import TODO.Lib.Crypt
 import TODO.Prelude hiding (Handler)
 import TODO.Query.Common (executeQuery)

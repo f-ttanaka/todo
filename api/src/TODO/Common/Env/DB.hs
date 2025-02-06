@@ -1,4 +1,4 @@
-module TODO.Application.DB where
+module TODO.Common.Env.DB where
 
 import qualified Hasql.Connection as Conn
 import Hasql.Pool (Pool)

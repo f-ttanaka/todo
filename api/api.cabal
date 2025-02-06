@@ -25,10 +25,10 @@ source-repository head
 
 library
   exposed-modules:
-      TODO.App
       TODO.Application
-      TODO.Application.DB
       TODO.Application.Server
+      TODO.Common.App
+      TODO.Common.Env.DB
       TODO.Handler.Todo
       TODO.Handler.User
       TODO.Lib.Crypt

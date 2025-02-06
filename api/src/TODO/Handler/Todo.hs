@@ -1,7 +1,7 @@
 module TODO.Handler.Todo where
 
 import Servant
-import TODO.App
+import TODO.Common.App
 import TODO.Prelude hiding (Handler)
 import TODO.Query.Common (executeQuery)
 import qualified TODO.Query.Todo as Query

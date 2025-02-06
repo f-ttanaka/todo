@@ -4,7 +4,7 @@
 module TODO.Application.Server (serveApplication) where
 
 import Servant
-import TODO.App
+import TODO.Common.App
 import TODO.Handler.Todo
 import TODO.Middleware
 import TODO.Prelude

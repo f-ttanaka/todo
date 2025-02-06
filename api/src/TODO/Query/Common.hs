@@ -6,7 +6,7 @@ where
 import Hasql.Pool
 import qualified Hasql.Session as Session
 import Hasql.Statement (Statement)
-import TODO.App
+import TODO.Common.App
 import TODO.Prelude
 
 executeQuery :: Statement param res -> param -> App res

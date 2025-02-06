@@ -8,5 +8,5 @@ where
 
 import Data.Text (pack, unpack)
 import Data.UUID (UUID)
-import RIO
+import RIO hiding (RIO (..))
 import System.IO (print, putStr, putStrLn)

@@ -1,16 +1,15 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module TODO.App
+module TODO.Common.App
   ( App,
-    Env,
     runApp,
     getDbConnPool,
-    liftApp,
   )
 where
 
 import Hasql.Pool (Pool)
-import TODO.Application.DB
+import RIO (RIO (..))
+import TODO.Common.Env.DB
 import TODO.Prelude
 
 data Env = Env
@@ -30,6 +29,3 @@ runApp app = do
           { dbConnPool = pool
           }
   runRIO env app
-
-liftApp :: (MonadIO m, MonadReader Env m) => App a -> m a
-liftApp = liftRIO
