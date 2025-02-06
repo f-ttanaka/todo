@@ -7,11 +7,11 @@ import TODO.Query.Common (executeQuery)
 import qualified TODO.Query.Todo as Query
 import TODO.Type.Todo
 
-getTodo :: App [Todo]
-getTodo = executeQuery Query.fetchAll ()
+getTodo :: UUID -> App [Todo]
+getTodo = executeQuery Query.fetchAll
 
-postTodo :: Text -> App UUID
-postTodo = executeQuery Query.insertOne
+postTodo :: UUID -> Text -> App UUID
+postTodo u t = executeQuery Query.insertOne (u, t)
 
 deleteTodo :: UUID -> App Int
 deleteTodo = executeQuery Query.deleteById

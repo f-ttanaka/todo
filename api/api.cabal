@@ -27,6 +27,7 @@ library
   exposed-modules:
       TODO.App
       TODO.Application
+      TODO.Application.DB
       TODO.Application.Server
       TODO.Handler.Todo
       TODO.Handler.User

@@ -7,7 +7,7 @@ import qualified Hasql.TH as TH
 import TODO.Prelude
 import TODO.Type.Todo
 
-fetchAll :: Statement () [Todo]
+fetchAll :: Statement UUID [Todo]
 fetchAll = rmap (Vec.toList . fmap decode) query
   where
     query =
@@ -18,6 +18,8 @@ fetchAll = rmap (Vec.toList . fmap decode) query
           , title :: text
           , completed :: boolean
         from todos
+        where 
+          user_uuid = $1 :: uuid
       |]
     decode (u, uu, t, c) = Todo u uu t c
 
@@ -31,14 +33,20 @@ deleteById = rmap fromIntegral query
           uuid = $1 :: uuid
       |]
 
-insertOne :: Statement Text UUID
+insertOne :: Statement (UUID, Text) UUID
 insertOne = query
   where
     query =
       [TH.singletonStatement|
         insert into
-          todos (title, completed)
-          values ($1 :: text, false)
+          todos (
+            user_uuid,
+            title,
+            completed)
+          values (
+            $1 :: uuid,
+            $2 :: text, 
+            false)
         returning uuid :: uuid
       |]
 

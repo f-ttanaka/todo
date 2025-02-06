@@ -3,8 +3,8 @@ import { Trash2 } from 'lucide-react';
 
 type Props = {
   todoList: Todo[];
-  changeCompleted: (id: number) => void;
-  deleteTodo: (id: number) => void;
+  changeCompleted: (uuid: string) => void;
+  deleteTodo: (uuid: string) => void;
 };
 
 export const TodoList = ({ todoList, changeCompleted, deleteTodo }: Props) => {
@@ -12,7 +12,7 @@ export const TodoList = ({ todoList, changeCompleted, deleteTodo }: Props) => {
     <div className="space-y-3">
       {todoList.map((todo) => (
         <div
-          key={todo.id}
+          key={todo.uuid}
           className="flex items-center gap-3 rounded bg-white p-2"
         >
           <label className="flex grow items-center gap-3 hover:cursor-pointer">
@@ -21,7 +21,7 @@ export const TodoList = ({ todoList, changeCompleted, deleteTodo }: Props) => {
                 type="checkbox"
                 className="size-5"
                 checked={todo.completed}
-                onChange={() => changeCompleted(todo.id)}
+                onChange={() => changeCompleted(todo.uuid)}
               />
             </div>
             {/* completedがtrueならクラスを適用、falseならクラスを適用しない */}
@@ -34,7 +34,7 @@ export const TodoList = ({ todoList, changeCompleted, deleteTodo }: Props) => {
           <button
             type="button"
             className="rounded bg-gray-200 p-2 transition-colors hover:bg-gray-300"
-            onClick={() => deleteTodo(todo.id)}
+            onClick={() => deleteTodo(todo.uuid)}
           >
             <Trash2 className="size-5 text-gray-500" />
           </button>

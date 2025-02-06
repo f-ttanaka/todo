@@ -9,10 +9,8 @@ module TODO.App
   )
 where
 
-import qualified Hasql.Connection as Conn
 import Hasql.Pool (Pool)
-import qualified Hasql.Pool as Pool
-import qualified Hasql.Pool.Config as Pool
+import TODO.Application.DB
 import TODO.Prelude
 
 data Env = Env
@@ -26,13 +24,7 @@ getDbConnPool = dbConnPool <$> ask
 
 runApp :: App a -> IO a
 runApp app = do
-  let dbConn = Conn.settings "localhost" 5430 "root" "root" "todo-app"
-      dbPoolSettings =
-        Pool.settings
-          [ Pool.size 10,
-            Pool.staticConnectionSettings dbConn
-          ]
-  pool <- Pool.acquire dbPoolSettings
+  pool <- makeDBConnPool
   let env =
         Env
           { dbConnPool = pool

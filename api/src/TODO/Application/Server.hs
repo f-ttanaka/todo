@@ -11,16 +11,16 @@ import TODO.Prelude
 import TODO.Type.Todo
 
 type API =
-  "api" :> "todo" :> Capture "title" Text :> Post '[JSON] UUID
-    :<|> "api" :> "todo" :> Get '[JSON] [Todo]
+  "api" :> "todo" :> Capture "userUuid" UUID :> Get '[JSON] [Todo]
+    :<|> "api" :> "todo" :> Capture "userUuid" UUID :> ReqBody '[JSON] Text :> Post '[JSON] UUID
     :<|> "api" :> "todo" :> Capture "uuid" UUID :> Delete '[JSON] Int
     :<|> "api" :> "todo" :> "title" :> Capture "uuid" UUID :> Capture "title" Text :> Put '[JSON] NoContent
     :<|> "api" :> "todo" :> "state" :> Capture "uuid" UUID :> Put '[JSON] NoContent
 
 server :: ServerT API App
 server =
-  postTodo
-    :<|> getTodo
+  getTodo
+    :<|> postTodo
     :<|> deleteTodo
     :<|> updateTitle
     :<|> updateStatus

@@ -7,7 +7,7 @@ import TODO.Prelude
 
 data Todo = Todo
   { uuid :: UUID,
-    user_uuid :: UUID,
+    userUuid :: UUID,
     title :: Text,
     completed :: Bool
   }

@@ -10,7 +10,7 @@ create table users (
 
 create table todos (
   uuid uuid not null default uuid_generate_v1(),
-	user_uuid not null, 
+	user_uuid uuid not null, 
   title text not null,
   completed boolean not null,
 	primary key (uuid),
