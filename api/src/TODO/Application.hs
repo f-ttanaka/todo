@@ -1,6 +1,3 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
-
 module TODO.Application (runApplication) where
 
 import Network.Wai.Handler.Warp
