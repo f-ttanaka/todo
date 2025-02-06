@@ -41,5 +41,5 @@ export const Route = createFileRoute('/todo/')({
 });
 
 function RouteComponent() {
-  return <TodoIndex/>
+  return <TodoIndex />;
 }

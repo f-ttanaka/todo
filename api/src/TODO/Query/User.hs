@@ -7,19 +7,6 @@ import TODO.Lib.Crypt
 import TODO.Prelude
 import TODO.Type.User
 
--- fetchByUuid :: UUID -> IO (Maybe User)
--- fetchByUuid ui = createSession $ Session.statement ui $ rmap (fmap decode) query
---   where
---     query =
---       [TH.maybeStatement|
---         select
---           uuid :: uuid
---           , name :: text
---         from todos
--- 				where uuid = $1 :: uuid
---       |]
---     decode (u, n) = User u n
-
 -- return user and password hash
 fetchByName :: Statement Text (Maybe (User, Text))
 fetchByName = rmap (fmap decode) query
@@ -30,7 +17,7 @@ fetchByName = rmap (fmap decode) query
           uuid :: uuid
           , name :: text
 					, password :: text
-        from todos
+        from users
 				where name = $1 :: text
       |]
     decode (u, n, p) = (User u n, p)

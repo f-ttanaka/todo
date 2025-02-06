@@ -10,10 +10,10 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as RegisterImport } from './routes/register'
-import { Route as LoginImport } from './routes/login'
-import { Route as TodoIndexImport } from './routes/todo/index'
+import { Route as rootRoute } from './routes/__root';
+import { Route as RegisterImport } from './routes/register';
+import { Route as LoginImport } from './routes/login';
+import { Route as TodoIndexImport } from './routes/todo/index';
 
 // Create/Update Routes
 
@@ -21,93 +21,93 @@ const RegisterRoute = RegisterImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const TodoIndexRoute = TodoIndexImport.update({
   id: '/todo/',
   path: '/todo/',
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
     '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/register';
+      path: '/register';
+      fullPath: '/register';
+      preLoaderRoute: typeof RegisterImport;
+      parentRoute: typeof rootRoute;
+    };
     '/todo/': {
-      id: '/todo/'
-      path: '/todo'
-      fullPath: '/todo'
-      preLoaderRoute: typeof TodoIndexImport
-      parentRoute: typeof rootRoute
-    }
+      id: '/todo/';
+      path: '/todo';
+      fullPath: '/todo';
+      preLoaderRoute: typeof TodoIndexImport;
+      parentRoute: typeof rootRoute;
+    };
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/todo': typeof TodoIndexRoute
+  '/login': typeof LoginRoute;
+  '/register': typeof RegisterRoute;
+  '/todo': typeof TodoIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/todo': typeof TodoIndexRoute
+  '/login': typeof LoginRoute;
+  '/register': typeof RegisterRoute;
+  '/todo': typeof TodoIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/todo/': typeof TodoIndexRoute
+  __root__: typeof rootRoute;
+  '/login': typeof LoginRoute;
+  '/register': typeof RegisterRoute;
+  '/todo/': typeof TodoIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/register' | '/todo'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/todo'
-  id: '__root__' | '/login' | '/register' | '/todo/'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: '/login' | '/register' | '/todo';
+  fileRoutesByTo: FileRoutesByTo;
+  to: '/login' | '/register' | '/todo';
+  id: '__root__' | '/login' | '/register' | '/todo/';
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
-  TodoIndexRoute: typeof TodoIndexRoute
+  LoginRoute: typeof LoginRoute;
+  RegisterRoute: typeof RegisterRoute;
+  TodoIndexRoute: typeof TodoIndexRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   TodoIndexRoute: TodoIndexRoute,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

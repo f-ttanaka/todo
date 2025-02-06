@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 
 module TODO.Type.User
@@ -23,6 +24,7 @@ data UserResigter = UserResigter
   { userName :: Text,
     userPassword :: Text -- not hashed
   }
+  deriving (Show, Generic, FromJSON)
 
 -- name, password (hashed)
 data UserOnSave = UserOnSave

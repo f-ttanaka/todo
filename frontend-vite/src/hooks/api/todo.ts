@@ -2,13 +2,16 @@ import { dummyUserUuid } from '@/data/dummyUserUuid';
 import type { Todo } from '@/types/todo';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-const apiRoot = 'http://127.0.0.1:3100/api/todo';
+const apiRoot = '/api/todo';
 
 export function useTodos() {
   return useQuery({
     queryKey: ['todo'],
     queryFn: () =>
-      fetch(`${apiRoot}/${dummyUserUuid}`, { method: 'GET' })
+      fetch(`${apiRoot}/${dummyUserUuid}`, {
+        method: 'GET',
+        credentials: 'include',
+      })
         .then((response) => {
           const result: Promise<Todo[]> = response.json();
           return result;

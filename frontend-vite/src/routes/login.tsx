@@ -1,13 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
-import {useState} from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
+import {useLogin} from '@/hooks/api/user'
 
 function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const {mutate: login} = useLogin();
+  const navigate = useNavigate();
+
+  const onSuccessLogin = (uuid : string | void) => {
+    navigate({
+      to: "/todo"
+    })
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in with", { username, password });
+    const uuid = login( {name: username, password: password},
+      {onSuccess: onSuccessLogin}
+    )
   };
 
   return (
@@ -43,7 +54,10 @@ function LoginPage() {
           </button>
         </form>
         <p className="text-sm text-center mt-4">
-          Don't have an account? <a href="/register" className="text-blue-500 hover:underline">Sign up</a>
+          Don't have an account?{' '}
+          <a href="/register" className="text-blue-500 hover:underline">
+            Sign up
+          </a>
         </p>
       </div>
     </div>
@@ -52,8 +66,8 @@ function LoginPage() {
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <LoginPage/>
+  return <LoginPage />;
 }

@@ -1,13 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
-import {useState} from 'react'
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
 
 function RegisterPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in with", { username, password });
+    console.log('Logging in with', { username, password });
   };
 
   return (
@@ -49,8 +49,8 @@ function RegisterPage() {
 
 export const Route = createFileRoute('/register')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <RegisterPage/>
+  return <RegisterPage />;
 }

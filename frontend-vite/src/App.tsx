@@ -10,7 +10,6 @@ declare module '@tanstack/react-router' {
 }
 
 function App() {
-
   return <RouterProvider router={router} />;
 }
 
