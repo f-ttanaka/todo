@@ -88,3 +88,4 @@ default-extensions:
   - OverloadedStrings
   - QuasiQuotes
   - DuplicateRecordFields
+  - LambdaCase

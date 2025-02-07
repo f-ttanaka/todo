@@ -2,7 +2,10 @@
 
 module TODO.Handler.User where
 
+import qualified Data.ByteString.Lazy as BSL
+import qualified Data.Time as Time
 import Servant
+import Servant.Auth.Server
 import TODO.Common.App
 import TODO.Lib.Crypt
 import TODO.Prelude hiding (Handler)
@@ -21,21 +24,29 @@ post (UserResigter n p) = do
           }
   executeQuery Query.insert u'
 
-login :: UserResigter -> App (Headers '[Header "Set-Cookie" SetCookie] UUID)
-login (UserResigter n p) = do
+login :: JWTSettings -> CookieSettings -> UserResigter -> App (Headers '[Header "Set-Cookie" SetCookie] NoContent)
+login js cs (UserResigter n p) = do
   res <- executeQuery Query.fetchByName n
+  now <- liftIO Time.getCurrentTime
+  let expiry = Time.addUTCTime (60 * 60) now
   case res of
     Just (u, pHashed)
-      | validatePasswordText pHashed p ->
-          return $ addHeader (setAuthCookie "valid_token") (userUuid u)
+      | validatePasswordText pHashed p -> do
+          mToken <- liftIO $ makeJWT u js (Just expiry)
+          case mToken of
+            Right token ->
+              return $ addHeader (setAuthCookie token) NoContent
+            Left err -> do
+              liftIO $ print err
+              throwM err500 {errBody = "JWT creation failed"}
       | otherwise -> throwM err401 {errBody = "Invalid credentials"}
     Nothing -> throwM err400 {errBody = "User not registered"}
   where
-    setAuthCookie :: Text -> SetCookie
+    setAuthCookie :: BSL.ByteString -> SetCookie
     setAuthCookie token =
       defaultSetCookie
         { setCookieName = "auth_token",
-          setCookieValue = encodeUtf8 token,
+          setCookieValue = BSL.toStrict token,
           setCookiePath = Just "/",
           setCookieHttpOnly = True,
           setCookieSecure = False, -- HTTPS 環境なら True に

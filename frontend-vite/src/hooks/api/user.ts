@@ -1,12 +1,21 @@
+import AuthContext from '@/context/auth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { useContext } from 'react';
 
 const apiRoot = '/api/login';
 
 export function useLogin() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ name, password }: { name: string; password: string }) =>
-      fetch(`${apiRoot}`, {
+    mutationFn: async ({
+      name,
+      password,
+    }: {
+      name: string;
+      password: string;
+    }) => {
+      const response = await fetch(apiRoot, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -17,15 +26,15 @@ export function useLogin() {
           userPassword: password,
         }),
         credentials: 'include',
-      })
-        .then((response) => {
-          // returned user uuid
-          const result: Promise<string> = response.json();
-          return result;
-        })
-        .catch((err) => {
-          console.error(err);
-        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('request error');
+      }
+
+      const data = await response.text();
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todo'] });
     },

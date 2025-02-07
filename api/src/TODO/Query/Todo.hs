@@ -23,14 +23,15 @@ fetchAll = rmap (Vec.toList . fmap decode) query
       |]
     decode (u, uu, t, c) = Todo u uu t c
 
-deleteById :: Statement UUID Int
+deleteById :: Statement (UUID, UUID) Int
 deleteById = rmap fromIntegral query
   where
     query =
       [TH.rowsAffectedStatement|
         delete from todos
         where
-          uuid = $1 :: uuid
+          user_uuid = $1 :: uuid
+          and uuid = $2 :: uuid
       |]
 
 insertOne :: Statement (UUID, Text) UUID
@@ -50,22 +51,24 @@ insertOne = query
         returning uuid :: uuid
       |]
 
-updateTitle :: Statement (UUID, Text) ()
+updateTitle :: Statement (UUID, UUID, Text) ()
 updateTitle = query
   where
     query =
       [TH.resultlessStatement|
         update todos
-          set title = $2 :: text
-        where uuid = $1 :: uuid
+          set title = $3 :: text
+        where user_uuid = $1 :: uuid
+        and uuid = $2 :: uuid
       |]
 
-updateStatus :: Statement UUID ()
+updateStatus :: Statement (UUID, UUID) ()
 updateStatus = query
   where
     query =
       [TH.resultlessStatement|
         update todos
           set completed = not completed
-        where uuid = $1 :: uuid
+        where user_uuid = $1 :: uuid
+        and uuid = $2 ::uuid
       |]

@@ -1,4 +1,3 @@
-import { dummyUserUuid } from '@/data/dummyUserUuid';
 import type { Todo } from '@/types/todo';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -7,18 +6,22 @@ const apiRoot = '/api/todo';
 export function useTodos() {
   return useQuery({
     queryKey: ['todo'],
-    queryFn: () =>
-      fetch(`${apiRoot}/${dummyUserUuid}`, {
+    queryFn: async () => {
+      const resp = await fetch(apiRoot, {
         method: 'GET',
         credentials: 'include',
-      })
-        .then((response) => {
-          const result: Promise<Todo[]> = response.json();
-          return result;
-        })
-        .catch(() => {
-          return null;
-        }),
+      });
+
+      if (!resp.ok) {
+        if (resp.status === 401) {
+          window.location.replace('/login');
+        }
+        throw new Error('Failed to fetch todos');
+      }
+
+      const data: Todo[] = await resp.json();
+      return data;
+    },
   });
 }
 
@@ -26,7 +29,7 @@ export function useCreateTodo() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (title: string) =>
-      fetch(`${apiRoot}/${dummyUserUuid}`, {
+      fetch(apiRoot, {
         method: 'POST',
         mode: 'cors',
         headers: {

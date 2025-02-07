@@ -9,7 +9,7 @@ module TODO.Type.User
 where
 
 import Data.Aeson (FromJSON, ToJSON)
-import Servant.Auth.Server (ToJWT)
+import Servant.Auth.Server (FromJWT, ToJWT)
 import TODO.Lib.Crypt
 import TODO.Prelude
 
@@ -18,7 +18,7 @@ data User = User
   { userUuid :: UUID,
     userName :: Text
   }
-  deriving (Show, Generic)
+  deriving (Show, Generic, FromJSON, ToJSON, FromJWT, ToJWT)
 
 data UserResigter = UserResigter
   { userName :: Text,
@@ -31,9 +31,3 @@ data UserOnSave = UserOnSave
   { userName :: Text,
     userPassword :: HashedText
   }
-
-instance ToJSON User
-
-instance ToJWT User
-
-instance FromJSON User

@@ -1,24 +1,25 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
-import {useLogin} from '@/hooks/api/user'
+import { useLogin } from '@/hooks/api/user';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {mutate: login} = useLogin();
+  const { mutate: login } = useLogin();
   const navigate = useNavigate();
 
-  const onSuccessLogin = (uuid : string | void) => {
+  const onSuccessLogin = (uuid: string | void) => {
     navigate({
-      to: "/todo"
-    })
-  }
+      to: '/todo',
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const uuid = login( {name: username, password: password},
-      {onSuccess: onSuccessLogin}
-    )
+    const uuid = login(
+      { name: username, password: password },
+      { onSuccess: onSuccessLogin },
+    );
   };
 
   return (
