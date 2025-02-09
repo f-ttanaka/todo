@@ -14,6 +14,7 @@ function TodoIndex() {
   const { mutate: createTodo } = useCreateTodo();
   const { mutate: deleteTodo } = useDeleteTodo();
   const { mutate: updateStatus } = useUpdateStatus();
+
   return (
     <main className="max-w-screen-md mx-auto">
       <h1 className="text-center text-4xl">Todoアプリ</h1>

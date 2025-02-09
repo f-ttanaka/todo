@@ -1,12 +1,8 @@
-import AuthContext from '@/context/auth';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
-import { useContext } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 const apiRoot = '/api/login';
 
 export function useLogin() {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
       name,
@@ -17,7 +13,6 @@ export function useLogin() {
     }) => {
       const response = await fetch(apiRoot, {
         method: 'POST',
-        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -34,9 +29,6 @@ export function useLogin() {
 
       const data = await response.text();
       return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todo'] });
     },
   });
 }

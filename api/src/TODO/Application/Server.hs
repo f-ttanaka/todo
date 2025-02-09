@@ -67,5 +67,5 @@ serveApplication js req res = do
           }
       context = cookieSettings :. js :. EmptyContext
       server' = server js cookieSettings
-      serve' = setCors $ serveWithContext api context $ hoistServerWithContext api (Proxy :: Proxy '[CookieSettings, JWTSettings]) handleApp server'
+      serve' = serveWithContext api context $ hoistServerWithContext api (Proxy :: Proxy '[CookieSettings, JWTSettings]) handleApp server'
   serve' req res

@@ -1,42 +1,25 @@
 import type { Todo } from '@/types/todo';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  deleteWithAuth,
+  getWithAuth,
+  postWithAuth,
+  putWithAuth,
+} from './common';
 
 const apiRoot = '/api/todo';
 
 export function useTodos() {
   return useQuery({
     queryKey: ['todo'],
-    queryFn: async () => {
-      const resp = await fetch(apiRoot, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!resp.ok) {
-        if (resp.status === 401) {
-          window.location.replace('/login');
-        }
-        throw new Error('Failed to fetch todos');
-      }
-
-      const data: Todo[] = await resp.json();
-      return data;
-    },
+    queryFn: () => getWithAuth<Todo[]>(apiRoot),
   });
 }
 
 export function useCreateTodo() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (title: string) =>
-      fetch(apiRoot, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(title),
-      }),
+    mutationFn: (title: string) => postWithAuth<void, string>(apiRoot, title),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todo'] });
     },
@@ -46,46 +29,19 @@ export function useCreateTodo() {
 export function useDeleteTodo() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (uuid: string) =>
-      fetch(`${apiRoot}/${uuid}`, {
-        method: 'DELETE',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }),
+    mutationFn: (uuid: string) => deleteWithAuth(`${apiRoot}/${uuid}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todo'] });
     },
   });
 }
 
-export function useUpdateTitle(uuid: string, title: string) {
-  return useQuery({
-    queryKey: ['todo'],
-    queryFn: () =>
-      fetch(`${apiRoot}/title/${uuid}/${title}`, {
-        method: 'PUT',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }),
-  });
-}
-
 export function useUpdateStatus() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (uuid: string) =>
-      fetch(`${apiRoot}/state/${uuid}`, {
-        method: 'PUT',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }),
-    onSuccess: () => {
+    mutationFn: (uuid: string) => putWithAuth(`${apiRoot}/state/${uuid}`),
+    // TODO: refactor
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['todo'] });
     },
   });
