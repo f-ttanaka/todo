@@ -1,5 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
 
+async function handleResponse(resp: Response) {
+  if (!resp.ok) {
+    throw new Error('request error');
+  }
+
+  const data = await resp.text();
+  return data;
+}
+
 export function useLogin() {
   return useMutation({
     mutationFn: async ({
@@ -9,7 +18,7 @@ export function useLogin() {
       name: string;
       password: string;
     }) => {
-      const response = await fetch('/api/login', {
+      const resp = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,12 +30,7 @@ export function useLogin() {
         credentials: 'include',
       });
 
-      if (!response.ok) {
-        throw new Error('request error');
-      }
-
-      const data = await response.text();
-      return data;
+      return handleResponse(resp);
     },
   });
 }
@@ -40,7 +44,7 @@ export function useCreateUser() {
       name: string;
       password: string;
     }) => {
-      const response = await fetch('/api/user', {
+      const resp = await fetch('/api/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,12 +55,7 @@ export function useCreateUser() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('request error');
-      }
-
-      const data = await response.text();
-      return data;
+      return handleResponse(resp);
     },
   });
 }

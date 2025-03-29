@@ -1,3 +1,4 @@
+import { useSnackbar } from '@/contexts/SnackBarContext';
 import { useCreateUser } from '@/hooks/api/user';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -7,6 +8,7 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const { mutate: createUser } = useCreateUser();
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +19,7 @@ function RegisterPage() {
           navigate({
             to: '/login',
           }),
+        onError: (e) => showSnackbar(e.message, 'error'),
       },
     );
   };

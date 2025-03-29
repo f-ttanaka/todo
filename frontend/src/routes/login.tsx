@@ -1,14 +1,17 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useLogin } from '@/hooks/api/user';
+import { useSnackbar } from '@/contexts/SnackBarContext';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { mutate: login } = useLogin();
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
 
   const onSuccessLogin = () => {
+    showSnackbar('ログインに成功しました。', 'success', true);
     navigate({
       to: '/todo',
     });
@@ -18,7 +21,10 @@ function LoginPage() {
     e.preventDefault();
     login(
       { name: username, password: password },
-      { onSuccess: onSuccessLogin },
+      {
+        onSuccess: onSuccessLogin,
+        onError: (e) => showSnackbar(e.message, 'error'),
+      },
     );
   };
 

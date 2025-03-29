@@ -1,19 +1,24 @@
+async function handleAuthResponse<T>(resp: Response): Promise<T> {
+  if (!resp.ok && resp.status === 401) {
+    window.location.replace('/login');
+  }
+
+  if (!resp.ok) {
+    const errorData = await resp.json();
+    throw new Error(errorData.error || '送信に失敗しました');
+  }
+
+  const data: T = await resp.json();
+  return data;
+}
+
 export async function getWithAuth<T>(apiRoot: string): Promise<T> {
   const resp = await fetch(apiRoot, {
     method: 'GET',
     credentials: 'include',
   });
 
-  if (!resp.ok && resp.status === 401) {
-    window.location.replace('/login');
-  }
-
-  if (!resp.ok) {
-    throw new Error('Failed to fetch data');
-  }
-
-  const data: T = await resp.json();
-  return data;
+  return handleAuthResponse<T>(resp);
 }
 
 export async function postWithAuth<T = void, U = undefined>(
@@ -28,16 +33,7 @@ export async function postWithAuth<T = void, U = undefined>(
     body: value ? JSON.stringify(value) : undefined,
   });
 
-  if (!resp.ok && resp.status === 401) {
-    window.location.replace('/login');
-  }
-
-  if (!resp.ok) {
-    throw new Error('Failed to post');
-  }
-
-  const data: T = await resp.json();
-  return data;
+  return handleAuthResponse<T>(resp);
 }
 
 export async function deleteWithAuth<T = void>(apiRoot: string) {
@@ -48,16 +44,7 @@ export async function deleteWithAuth<T = void>(apiRoot: string) {
     },
   });
 
-  if (!resp.ok && resp.status === 401) {
-    window.location.replace('/login');
-  }
-
-  if (!resp.ok) {
-    throw new Error('Failed to delete');
-  }
-
-  const data: T = await resp.json();
-  return data;
+  return handleAuthResponse<T>(resp);
 }
 
 export async function putWithAuth<T = void, U = undefined>(
@@ -72,14 +59,5 @@ export async function putWithAuth<T = void, U = undefined>(
     body: value ? JSON.stringify(value) : undefined,
   });
 
-  if (!resp.ok && resp.status === 401) {
-    window.location.replace('/login');
-  }
-
-  if (!resp.ok) {
-    throw new Error('Failed to delete');
-  }
-
-  const data: T = await resp.json();
-  return data;
+  return handleAuthResponse<T>(resp);
 }
