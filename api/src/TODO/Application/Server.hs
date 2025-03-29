@@ -41,10 +41,10 @@ type APIRoutes =
   ProtectedRoutes
     :<|> UnprotectedRoutes
 
-server :: JWTSettings -> CookieSettings -> ServerT APIRoutes App
-server js cs =
+server :: JWTSettings -> ServerT APIRoutes App
+server js =
   serverForTODO
-    :<|> login js cs
+    :<|> login js
     :<|> post
 
 api :: Proxy APIRoutes
@@ -67,6 +67,6 @@ serveApplication js req res = do
             sessionCookieName = "auth_token"
           }
       context = cookieSettings :. js :. EmptyContext
-      server' = server js cookieSettings
+      server' = server js
       serve' = serveWithContext api context $ hoistServerWithContext api (Proxy :: Proxy '[CookieSettings, JWTSettings]) handleApp server'
   serve' req res

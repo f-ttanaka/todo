@@ -30,8 +30,8 @@ post (UserResigter n p) = do
       void $ executeQuery Query.insert u'
       return NoContent
 
-login :: JWTSettings -> CookieSettings -> UserResigter -> App (Headers '[Header "Set-Cookie" SetCookie] NoContent)
-login js cs (UserResigter n p) = do
+login :: JWTSettings -> UserResigter -> App (Headers '[Header "Set-Cookie" SetCookie] NoContent)
+login js (UserResigter n p) = do
   res <- executeQuery Query.fetchByName n
   now <- liftIO Time.getCurrentTime
   let expiry = Time.addUTCTime (60 * 60) now
