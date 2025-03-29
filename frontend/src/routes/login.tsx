@@ -8,7 +8,7 @@ function LoginPage() {
   const { mutate: login } = useLogin();
   const navigate = useNavigate();
 
-  const onSuccessLogin = (uuid: string | void) => {
+  const onSuccessLogin = () => {
     navigate({
       to: '/todo',
     });
@@ -16,7 +16,7 @@ function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const uuid = login(
+    login(
       { name: username, password: password },
       { onSuccess: onSuccessLogin },
     );
@@ -66,9 +66,5 @@ function LoginPage() {
 }
 
 export const Route = createFileRoute('/login')({
-  component: RouteComponent,
+  component: () => <LoginPage />,
 });
-
-function RouteComponent() {
-  return <LoginPage />;
-}

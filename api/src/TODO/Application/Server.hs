@@ -10,14 +10,13 @@ import Servant.Auth.Server
 import TODO.Common.App
 import TODO.Handler.Todo
 import TODO.Handler.User
-import TODO.Middleware.Cors
 import TODO.Prelude hiding (Handler)
 import TODO.Type.Todo
 import TODO.Type.User
 
 type APIPrefix = "api"
 
-type TODOAPIRoutes =
+type ProtectedRoutes =
   APIPrefix :> "todo" :> Auth '[Cookie] User :> Get '[JSON] [Todo]
     :<|> APIPrefix :> "todo" :> Auth '[Cookie] User :> ReqBody '[JSON] Text :> Post '[JSON] NoContent
     :<|> APIPrefix :> "todo" :> Auth '[Cookie] User :> Capture "uuid" UUID :> Delete '[JSON] Int
@@ -26,7 +25,7 @@ type TODOAPIRoutes =
 
 -- type TODOAPIRoutes = APIPrefix :> "todo" :> Auth '[Cookie] User :> TODOCRUDRoutes
 
-serverForTODO :: ServerT TODOAPIRoutes App
+serverForTODO :: ServerT ProtectedRoutes App
 serverForTODO =
   getTodo
     :<|> postTodo
@@ -34,17 +33,19 @@ serverForTODO =
     :<|> updateTitle
     :<|> updateStatus
 
-type LoginAPIRoutes =
+type UnprotectedRoutes =
   APIPrefix :> "login" :> ReqBody '[JSON] UserResigter :> Post '[JSON] (Headers '[Header "Set-Cookie" SetCookie] NoContent)
+    :<|> APIPrefix :> "user" :> ReqBody '[JSON] UserResigter :> Post '[JSON] NoContent
 
 type APIRoutes =
-  TODOAPIRoutes
-    :<|> LoginAPIRoutes
+  ProtectedRoutes
+    :<|> UnprotectedRoutes
 
 server :: JWTSettings -> CookieSettings -> ServerT APIRoutes App
 server js cs =
   serverForTODO
     :<|> login js cs
+    :<|> post
 
 api :: Proxy APIRoutes
 api = Proxy

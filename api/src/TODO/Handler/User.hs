@@ -7,6 +7,7 @@ import qualified Data.Time as Time
 import Servant
 import Servant.Auth.Server
 import TODO.Common.App
+import TODO.Handler.Internal
 import TODO.Lib.Crypt
 import TODO.Prelude hiding (Handler)
 import TODO.Query.Common (executeQuery)
@@ -14,15 +15,20 @@ import qualified TODO.Query.User as Query
 import TODO.Type.User
 import Web.Cookie
 
-post :: UserResigter -> App UUID
+post :: UserResigter -> App NoContent
 post (UserResigter n p) = do
-  pHashed <- makeHashedText p
-  let u' =
-        UserOnSave
-          { userName = n,
-            userPassword = pHashed
-          }
-  executeQuery Query.insert u'
+  same <- executeQuery Query.fetchByName n
+  case same of
+    Just _ -> throwJsonError err500 "Already exists same name user!"
+    Nothing -> do
+      pHashed <- makeHashedText p
+      let u' =
+            UserOnSave
+              { userName = n,
+                userPassword = pHashed
+              }
+      void $ executeQuery Query.insert u'
+      return NoContent
 
 login :: JWTSettings -> CookieSettings -> UserResigter -> App (Headers '[Header "Set-Cookie" SetCookie] NoContent)
 login js cs (UserResigter n p) = do
@@ -38,9 +44,9 @@ login js cs (UserResigter n p) = do
               return $ addHeader (setAuthCookie token) NoContent
             Left err -> do
               liftIO $ print err
-              throwM err500 {errBody = "JWT creation failed"}
-      | otherwise -> throwM err401 {errBody = "Invalid credentials"}
-    Nothing -> throwM err400 {errBody = "User not registered"}
+              throwJsonError err500 "JWT creation failed"
+      | otherwise -> throwJsonError err401 "Invalid credentials"
+    Nothing -> throwJsonError err400 "User not registered"
   where
     setAuthCookie :: BSL.ByteString -> SetCookie
     setAuthCookie token =
@@ -53,13 +59,3 @@ login js cs (UserResigter n p) = do
           setCookieMaxAge = Just 3600, -- 1時間有効
           setCookieSameSite = Just sameSiteLax
         }
-
--- login :: JWTSettings -> UserResigter -> Handler (Headers '[Header "Set-Cookie" SetCookie] NoContent)
--- login js (UserResigter n p) = do
---   res <- liftIO $ Query.fetchByName n
---   case res of
---     Just (u, pHashed) | validatePasswordText pHashed p -> do
---       mApplyCookie <- liftIO $ acceptLogin defaultCookieSettings js u
---       case mApplyCookie of
---         Nothing -> throwError err401
---         Just applyCookies -> return $ applyCookies NoContent

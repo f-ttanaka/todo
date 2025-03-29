@@ -29,6 +29,7 @@ library
       TODO.Application.Server
       TODO.Common.App
       TODO.Common.Env.DB
+      TODO.Handler.Internal
       TODO.Handler.Todo
       TODO.Handler.User
       TODO.Lib.Crypt
