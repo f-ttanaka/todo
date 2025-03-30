@@ -15,7 +15,7 @@ import TODO.Type.User
 
 -- TODO: improve and use connection pool in migration
 connectionSettings :: Conn.Settings
-connectionSettings = Conn.settings "localhost" 5430 "root" "root" "todo-app"
+connectionSettings = Conn.settings "db-local" 5432 "root" "root" "todo-app"
 
 pickRight :: (Show e) => IO (Either e a) -> IO a
 pickRight m = do

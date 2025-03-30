@@ -1,7 +1,7 @@
 version: '3'
 services:
   db-local:
-    container_name: postgres
+    container_name: db-local
     image: postgres:16
     build: .
     ports:
@@ -10,3 +10,14 @@ services:
       POSTGRES_DB: todo-app
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+  backend-hs:
+    container_name: backend-hs  # コンテナ名を指定
+    build: ./api  # api ディレクトリ内の Dockerfile を使う
+    depends_on:
+      - db-local
+    ports:
+      - "3100:3100"  # ローカルの 3000 番ポートをコンテナの 8080 番にマッピング
+    volumes:
+      - ./api:/app  # api ディレクトリをコンテナ内にマウント
+    stdin_open: true  # `docker-compose run` の際に `stdin` を開く
+    tty: true  # TTY を有効にする（対話的な `bash` 実行を可能にする）

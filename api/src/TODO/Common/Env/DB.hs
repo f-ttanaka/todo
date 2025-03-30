@@ -8,7 +8,7 @@ import TODO.Prelude
 
 makeDBConnPool :: (MonadIO m) => m Pool
 makeDBConnPool = do
-  let dbConn = Conn.settings "localhost" 5430 "root" "root" "todo-app"
+  let dbConn = Conn.settings "db-local" 5432 "root" "root" "todo-app"
       dbPoolSettings =
         Pool.settings
           [ Pool.size 10,

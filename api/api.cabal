@@ -35,7 +35,6 @@ library
       TODO.Lib.Crypt
       TODO.Middleware
       TODO.Middleware.Auth
-      TODO.Middleware.Cors
       TODO.Prelude
       TODO.Query.Common
       TODO.Query.Todo
