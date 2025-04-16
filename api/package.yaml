@@ -35,6 +35,7 @@ dependencies:
 - hasql-transaction
 - hasql-migration
 - profunctors
+- relude
 - rio
 - safe-exceptions
 - servant

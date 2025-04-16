@@ -35,7 +35,7 @@ post (UserResigter n p) = do
 login :: UserResigter -> App (Headers '[Header "Set-Cookie" SetCookie] NoContent)
 login (UserResigter n p) = do
   res <- executeQuery Query.fetchByName n
-  sid <- generateUuidText
+  sid <- generateUuid
   case res of
     Just (u, pHashed)
       | validatePasswordText pHashed p -> do

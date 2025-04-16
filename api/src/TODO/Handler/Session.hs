@@ -10,24 +10,24 @@ where
 import Control.Monad.Error.Class (MonadError)
 import qualified Data.ByteString.Lazy as BSL
 import qualified Data.Text.Encoding as TE
-import Database.Redis (Connection, get, runRedis, setex)
+import qualified Database.Redis as Redis
 import Servant
 import TODO.Common.App
 import TODO.Prelude
 import Web.Cookie
 
-saveSession :: Text -> UUID -> App BSL.ByteString
+saveSession :: UUID -> UUID -> App BSL.ByteString
 saveSession sessionId uu = do
   conn <- getRedisConn
-  liftIO . runRedis conn $ do
-    let sid' = encodeUtf8 sessionId
+  liftIO . Redis.runRedis conn $ do
+    let sid' = encodeUtf8 $ toText sessionId
     -- 3600秒（1時間）で自動期限切れ
-    void $ setex ("session:" <> sid') 3600 (TE.encodeUtf8 $ toText uu)
+    void $ Redis.setex ("session:" <> sid') 3600 (TE.encodeUtf8 $ toText uu)
     return $ BSL.fromStrict sid'
 
-getUserInfoFromSession :: (MonadIO m, MonadError ServerError m) => Connection -> ByteString -> m UUID
+getUserInfoFromSession :: (MonadIO m, MonadError ServerError m) => Redis.Connection -> ByteString -> m UUID
 getUserInfoFromSession rc sid = do
-  result <- liftIO $ runRedis rc $ get ("session:" <> sid)
+  result <- liftIO $ Redis.runRedis rc $ Redis.get ("session:" <> sid)
   case result of
     Right (Just userJson) -> do
       case fromText $ TE.decodeUtf8 userJson of

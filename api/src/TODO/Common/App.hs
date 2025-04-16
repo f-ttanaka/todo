@@ -1,3 +1,5 @@
+{-# LANGUAGE GeneralisedNewtypeDeriving #-}
+
 module TODO.Common.App
   ( App,
     Env,
@@ -11,7 +13,6 @@ where
 
 import Database.Redis (Connection, connect, connectHost, defaultConnectInfo)
 import Hasql.Pool (Pool)
-import RIO (RIO (..))
 import TODO.Common.Env.DB
 import TODO.Prelude
 
@@ -20,7 +21,15 @@ data Env = Env
     redisConn :: Connection
   }
 
-type App = RIO Env
+newtype App a = App (ReaderT Env IO a)
+  deriving
+    ( Functor,
+      Applicative,
+      Monad,
+      MonadIO,
+      MonadThrow,
+      MonadReader Env
+    )
 
 getDbConnPool :: App Pool
 getDbConnPool = dbConnPool <$> ask
@@ -40,4 +49,4 @@ initialEnv = do
       }
 
 runApp :: Env -> App a -> IO a
-runApp = runRIO
+runApp env (App m) = runReaderT m env

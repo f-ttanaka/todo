@@ -69,6 +69,7 @@ library
     , http-types
     , mtl
     , profunctors
+    , relude
     , rio
     , safe-exceptions
     , servant
@@ -113,6 +114,7 @@ executable api-exe
     , http-types
     , mtl
     , profunctors
+    , relude
     , rio
     , safe-exceptions
     , servant
@@ -158,6 +160,7 @@ test-suite api-test
     , http-types
     , mtl
     , profunctors
+    , relude
     , rio
     , safe-exceptions
     , servant

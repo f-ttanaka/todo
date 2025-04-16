@@ -14,7 +14,7 @@ newtype HashedText = MK
   { hashedText :: Text
   }
 
-makeHashedText :: (MonadIO m) => Text -> m HashedText
+makeHashedText :: (MonadIO m, MonadThrow m) => Text -> m HashedText
 makeHashedText txt = do
   res <- liftIO $ hashPasswordUsingPolicy slowerBcryptHashingPolicy (encodeUtf8 txt)
   case res of
@@ -24,5 +24,5 @@ makeHashedText txt = do
     _ -> throwString "hash error"
 
 validatePasswordText :: Text -> Text -> Bool
-validatePasswordText hash pass =
-  validatePassword (TE.encodeUtf8 hash) (TE.encodeUtf8 pass)
+validatePasswordText hash pw =
+  validatePassword (TE.encodeUtf8 hash) (TE.encodeUtf8 pw)

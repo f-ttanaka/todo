@@ -5,6 +5,7 @@
 
 module TODO.Application.Server (serveApplication) where
 
+import Data.List (lookup)
 import qualified Database.Redis as Redis
 import Network.Wai
 import Servant

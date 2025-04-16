@@ -1,6 +1,7 @@
 module TODO.Middleware.Auth (authMiddleware) where
 
 import qualified Data.ByteString.Char8 as BS
+import Data.List (lookup)
 import Network.HTTP.Types.Status
 import Network.Wai
 import TODO.Prelude
