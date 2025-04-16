@@ -1,29 +1,33 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
 module TODO.Application.Server (serveApplication) where
 
-import qualified Data.Time as Time
+import qualified Database.Redis as Redis
 import Network.Wai
 import Servant
-import Servant.Auth.Server
+import Servant.Server.Experimental.Auth
 import TODO.Common.App
+import TODO.Handler.Session
 import TODO.Handler.Todo
 import TODO.Handler.User
 import TODO.Prelude hiding (Handler)
 import TODO.Type.Todo
 import TODO.Type.User
+import Web.Cookie
 
 type APIPrefix = "api"
 
 type ProtectedRoutes =
-  APIPrefix :> "todo" :> Auth '[Cookie] User :> Get '[JSON] [Todo]
-    :<|> APIPrefix :> "todo" :> Auth '[Cookie] User :> ReqBody '[JSON] Text :> Post '[JSON] NoContent
-    :<|> APIPrefix :> "todo" :> Auth '[Cookie] User :> Capture "uuid" UUID :> Delete '[JSON] Int
-    :<|> APIPrefix :> "todo" :> Auth '[Cookie] User :> "title" :> Capture "uuid" UUID :> Capture "title" Text :> Put '[JSON] NoContent
-    :<|> APIPrefix :> "todo" :> Auth '[Cookie] User :> "state" :> Capture "uuid" UUID :> Put '[JSON] NoContent
+  AuthProtect "session-cookie" :> APIPrefix :> "todo" :> Get '[JSON] [Todo]
+    :<|> AuthProtect "session-cookie" :> APIPrefix :> "todo" :> ReqBody '[JSON] Text :> Post '[JSON] NoContent
+    :<|> AuthProtect "session-cookie" :> APIPrefix :> "todo" :> Capture "uuid" UUID :> Delete '[JSON] Int
+    :<|> AuthProtect "session-cookie" :> APIPrefix :> "todo" :> "title" :> Capture "uuid" UUID :> Capture "title" Text :> Put '[JSON] NoContent
+    :<|> AuthProtect "session-cookie" :> APIPrefix :> "todo" :> "state" :> Capture "uuid" UUID :> Put '[JSON] NoContent
 
--- type TODOAPIRoutes = APIPrefix :> "todo" :> Auth '[Cookie] User :> TODOCRUDRoutes
+type instance AuthServerData (AuthProtect "session-cookie") = UUID
 
 serverForTODO :: ServerT ProtectedRoutes App
 serverForTODO =
@@ -41,32 +45,30 @@ type APIRoutes =
   ProtectedRoutes
     :<|> UnprotectedRoutes
 
-server :: JWTSettings -> ServerT APIRoutes App
-server js =
+server :: ServerT APIRoutes App
+server =
   serverForTODO
-    :<|> login js
+    :<|> login
     :<|> post
 
-api :: Proxy APIRoutes
-api = Proxy
-
-handleApp :: App a -> Handler a
-handleApp action = do
-  result <- liftIO $ try $ runApp action
+handleApp :: Env -> App a -> Handler a
+handleApp env action = do
+  result <- liftIO $ try $ runApp env action
   case result of
-    Left e -> throwError e
+    Left e -> do
+      -- ログ出力（必要なら env にロガーを組み込むとよい）
+      liftIO $ putStrLn ("[ERROR] " ++ displayException e)
+      throwError e
     Right val -> return val
 
-serveApplication :: JWTSettings -> Application
-serveApplication js req res = do
-  let cookieSettings =
-        defaultCookieSettings
-          { cookieIsSecure = NotSecure,
-            cookieMaxAge = Just $ Time.secondsToDiffTime (60 * 60),
-            cookieXsrfSetting = Nothing,
-            sessionCookieName = "auth_token"
-          }
-      context = cookieSettings :. js :. EmptyContext
-      server' = server js
-      serve' = serveWithContext api context $ hoistServerWithContext api (Proxy :: Proxy '[CookieSettings, JWTSettings]) handleApp server'
-  serve' req res
+authHandler :: Redis.Connection -> AuthHandler Request UUID
+authHandler rc = mkAuthHandler $ \req -> do
+  let cookies = maybe [] parseCookies (lookup "cookie" (requestHeaders req))
+  case lookup "session_id" cookies of
+    Nothing -> throwError err401
+    Just sid -> getUserInfoFromSession rc sid
+
+serveApplication :: Env -> Application
+serveApplication env =
+  let context = authHandler (redisConn env) :. EmptyContext
+   in serveWithContextT (Proxy :: Proxy APIRoutes) context (handleApp env) server

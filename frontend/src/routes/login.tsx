@@ -23,7 +23,7 @@ function LoginPage() {
       { name: username, password: password },
       {
         onSuccess: onSuccessLogin,
-        onError: (e) => showSnackbar(e.message, 'error'),
+        onError: (err) => showSnackbar(err.message, 'error'),
       },
     );
   };

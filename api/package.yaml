@@ -24,15 +24,9 @@ dependencies:
 - bcrypt
 - bytestring
 - cookie
-- wai
-- wai-logger
-- wai-cors
-- warp
+- hedis
 - http-types
 - http-api-data
-- servant
-- servant-auth-server
-- servant-server
 - aeson
 - mtl
 - hasql
@@ -40,12 +34,19 @@ dependencies:
 - hasql-th
 - hasql-transaction
 - hasql-migration
-- vector
-- rio
 - profunctors
+- rio
+- safe-exceptions
+- servant
+- servant-server
 - text
 - time
 - uuid
+- vector
+- wai
+- wai-logger
+- wai-cors
+- warp
 
 ghc-options:
 - -Wall

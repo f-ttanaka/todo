@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 async function handleResponse(resp: Response) {
   if (!resp.ok) {
+    console.log(resp);
     throw new Error('request error');
   }
 

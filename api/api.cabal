@@ -30,6 +30,7 @@ library
       TODO.Common.App
       TODO.Common.Env.DB
       TODO.Handler.Internal
+      TODO.Handler.Session
       TODO.Handler.Todo
       TODO.Handler.User
       TODO.Lib.Crypt
@@ -63,13 +64,14 @@ library
     , hasql-pool
     , hasql-th
     , hasql-transaction
+    , hedis
     , http-api-data
     , http-types
     , mtl
     , profunctors
     , rio
+    , safe-exceptions
     , servant
-    , servant-auth-server
     , servant-server
     , text
     , time
@@ -84,7 +86,6 @@ library
 executable api-exe
   main-is: Main.hs
   other-modules:
-      Dev
       Paths_api
   hs-source-dirs:
       app
@@ -107,13 +108,14 @@ executable api-exe
     , hasql-pool
     , hasql-th
     , hasql-transaction
+    , hedis
     , http-api-data
     , http-types
     , mtl
     , profunctors
     , rio
+    , safe-exceptions
     , servant
-    , servant-auth-server
     , servant-server
     , text
     , time
@@ -151,13 +153,14 @@ test-suite api-test
     , hasql-pool
     , hasql-th
     , hasql-transaction
+    , hedis
     , http-api-data
     , http-types
     , mtl
     , profunctors
     , rio
+    , safe-exceptions
     , servant
-    , servant-auth-server
     , servant-server
     , text
     , time

@@ -1,4 +1,7 @@
-module TODO.Handler.Internal where
+module TODO.Handler.Internal
+  ( throwJsonError,
+  )
+where
 
 import Data.Aeson
 import Servant

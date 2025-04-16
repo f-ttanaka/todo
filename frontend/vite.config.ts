@@ -16,6 +16,8 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3100', // バックエンドのアドレス
         changeOrigin: true,
+        cookieDomainRewrite: '',
+        secure: false,
       },
     },
   },

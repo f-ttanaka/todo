@@ -1,20 +1,29 @@
 version: '3'
 services:
-  db-local:
+  db:
     container_name: db-local
     image: postgres:16
-    build: .
     ports:
       - 5430:5432
     environment:
-      POSTGRES_DB: todo-app
+      POSTGRES_DB: todo_app
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+    volumes:
+      - ./data/pgdata:/var/lib/postgresql/data
+  redis:
+    image: redis:7
+    container_name: redis-local
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis-data:/data
   backend-hs:
-    container_name: backend-hs  # コンテナ名を指定
+    container_name: api-server  # コンテナ名を指定
     build: ./api  # api ディレクトリ内の Dockerfile を使う
     depends_on:
-      - db-local
+      - db
+      - redis
     ports:
       - "3100:3100"  # ローカルの 3000 番ポートをコンテナの 8080 番にマッピング
     volumes:
