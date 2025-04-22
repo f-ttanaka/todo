@@ -5,7 +5,7 @@ where
 
 import Data.Aeson
 import Servant
-import TODO.Prelude hiding (Handler)
+import TODO.Prelude
 
 throwJsonError :: (MonadThrow m) => ServerError -> String -> m a
 throwJsonError err msg =

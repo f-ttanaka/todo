@@ -25,17 +25,17 @@ source-repository head
 
 library
   exposed-modules:
-      TODO.Application
+      TODO.Admin.Index
+      TODO.Application.Run
       TODO.Application.Server
       TODO.Common.App
       TODO.Common.Env.DB
+      TODO.Handler.Admin.User
       TODO.Handler.Internal
       TODO.Handler.Session
       TODO.Handler.Todo
       TODO.Handler.User
       TODO.Lib.Crypt
-      TODO.Middleware
-      TODO.Middleware.Auth
       TODO.Prelude
       TODO.Query.Common
       TODO.Query.Todo
@@ -67,12 +67,15 @@ library
     , hedis
     , http-api-data
     , http-types
+    , lucid
     , mtl
     , profunctors
     , relude
+    , retry
     , rio
     , safe-exceptions
     , servant
+    , servant-lucid
     , servant-server
     , text
     , time
@@ -112,12 +115,15 @@ executable api-exe
     , hedis
     , http-api-data
     , http-types
+    , lucid
     , mtl
     , profunctors
     , relude
+    , retry
     , rio
     , safe-exceptions
     , servant
+    , servant-lucid
     , servant-server
     , text
     , time
@@ -158,12 +164,15 @@ test-suite api-test
     , hedis
     , http-api-data
     , http-types
+    , lucid
     , mtl
     , profunctors
     , relude
+    , retry
     , rio
     , safe-exceptions
     , servant
+    , servant-lucid
     , servant-server
     , text
     , time

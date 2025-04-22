@@ -10,7 +10,7 @@ where
 
 import Data.Aeson (FromJSON, ToJSON)
 import TODO.Lib.Crypt
-import TODO.Prelude
+import TODO.Prelude (Generic, Show, Text, UUID)
 
 -- uuid, name
 data User = User

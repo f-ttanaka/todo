@@ -20,25 +20,28 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/githubuser/api#readme>
 
 dependencies:
+- aeson
 - base >= 4.7 && < 5
 - bcrypt
 - bytestring
 - cookie
-- hedis
-- http-types
-- http-api-data
-- aeson
-- mtl
 - hasql
 - hasql-pool
 - hasql-th
 - hasql-transaction
 - hasql-migration
+- hedis
+- http-types
+- http-api-data
+- lucid
+- mtl
 - profunctors
 - relude
+- retry
 - rio
 - safe-exceptions
 - servant
+- servant-lucid
 - servant-server
 - text
 - time

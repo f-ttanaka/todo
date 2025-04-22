@@ -11,7 +11,7 @@ import TODO.Common.App
 import TODO.Handler.Internal
 import TODO.Handler.Session
 import TODO.Lib.Crypt
-import TODO.Prelude hiding (Handler)
+import TODO.Prelude
 import TODO.Query.Common (executeQuery)
 import qualified TODO.Query.User as Query
 import TODO.Type.User

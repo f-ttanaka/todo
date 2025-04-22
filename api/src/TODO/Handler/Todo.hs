@@ -1,13 +1,18 @@
-module TODO.Handler.Todo where
+module TODO.Handler.Todo
+  ( getTodo,
+    postTodo,
+    deleteTodo,
+    updateStatus,
+    updateTitle,
+  )
+where
 
 import Servant
 import TODO.Common.App
-import TODO.Prelude hiding (Handler)
+import TODO.Prelude
 import TODO.Query.Common (executeQuery)
 import qualified TODO.Query.Todo as Query
 import TODO.Type.Todo (Todo)
-import TODO.Type.User (User)
-import qualified TODO.Type.User as U
 
 getTodo :: UUID -> App [Todo]
 getTodo u = executeQuery Query.fetchAll u

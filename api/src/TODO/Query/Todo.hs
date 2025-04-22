@@ -1,4 +1,11 @@
-module TODO.Query.Todo where
+module TODO.Query.Todo
+  ( fetchAll,
+    deleteById,
+    insertOne,
+    updateTitle,
+    updateStatus,
+  )
+where
 
 import Data.Profunctor (rmap)
 import qualified Data.Vector as Vec

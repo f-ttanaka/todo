@@ -1,6 +1,12 @@
-module TODO.Query.User where
+module TODO.Query.User
+  ( fetchByName,
+    fetchAll,
+    insert,
+  )
+where
 
 import Data.Profunctor (lmap, rmap)
+import qualified Data.Vector as V
 import Hasql.Statement (Statement)
 import qualified Hasql.TH as TH
 import TODO.Lib.Crypt
@@ -21,6 +27,17 @@ fetchByName = rmap (fmap decode) query
 				where name = $1 :: text
       |]
     decode (u, n, p) = (User u n, p)
+
+fetchAll :: Statement () [User]
+fetchAll = rmap (V.toList . fmap decode) query
+  where
+    query =
+      [TH.vectorStatement|
+      select
+        uuid :: uuid
+        , name :: text
+        from users|]
+    decode (u, n) = User u n
 
 insert :: Statement UserOnSave UUID
 insert = lmap encode query

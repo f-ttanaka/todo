@@ -39,8 +39,8 @@ getRedisConn = redisConn <$> ask
 
 initialEnv :: IO Env
 initialEnv = do
-  migrate
   pool <- makeDBConnPool
+  migrate pool
   rc <- connect $ defaultConnectInfo {connectHost = "redis"}
   return $
     Env

@@ -1,4 +1,4 @@
-module TODO.Application (runApplication) where
+module TODO.Application.Run (runApplication) where
 
 import Network.Wai.Handler.Warp
 import Network.Wai.Logger
