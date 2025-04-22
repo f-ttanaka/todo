@@ -60,12 +60,12 @@ function LoginPage() {
             Login
           </button>
         </form>
-        <p className="text-sm text-center mt-4">
+        {/* <p className="text-sm text-center mt-4">
           Don't have an account?{' '}
           <a href="/register" className="text-blue-500 hover:underline">
             Sign up
           </a>
-        </p>
+        </p> */}
       </div>
     </div>
   );

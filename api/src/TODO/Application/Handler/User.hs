@@ -1,20 +1,18 @@
 {-# LANGUAGE DataKinds #-}
 
-module TODO.Handler.User
+module TODO.Application.Handler.User
   ( post,
     login,
   )
 where
 
 import Servant
-import TODO.Common.App
-import TODO.Handler.Internal
-import TODO.Handler.Session
+import TODO.Application.Auth.Session
+import TODO.Application.Handler.Internal
+import TODO.Application.Internal
+import qualified TODO.DB.Query.User as Query
+import TODO.Data.User
 import TODO.Lib.Crypt
-import TODO.Prelude
-import TODO.Query.Common (executeQuery)
-import qualified TODO.Query.User as Query
-import TODO.Type.User
 import Web.Cookie
 
 post :: UserResigter -> App NoContent

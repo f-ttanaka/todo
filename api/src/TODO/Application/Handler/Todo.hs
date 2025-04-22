@@ -1,4 +1,4 @@
-module TODO.Handler.Todo
+module TODO.Application.Handler.Todo
   ( getTodo,
     postTodo,
     deleteTodo,
@@ -8,11 +8,10 @@ module TODO.Handler.Todo
 where
 
 import Servant
-import TODO.Common.App
-import TODO.Prelude
-import TODO.Query.Common (executeQuery)
-import qualified TODO.Query.Todo as Query
-import TODO.Type.Todo (Todo)
+import TODO.Application.Handler.Internal
+import TODO.Application.Internal
+import qualified TODO.DB.Query.Todo as Query
+import TODO.Data.Todo (Todo)
 
 getTodo :: UUID -> App [Todo]
 getTodo u = executeQuery Query.fetchAll u

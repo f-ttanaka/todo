@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module TODO.Handler.Session
+module TODO.Application.Auth.Session
   ( saveSession,
     getUserInfoFromSession,
     setAuthCookie,
@@ -12,8 +12,7 @@ import qualified Data.ByteString.Lazy as BSL
 import qualified Data.Text.Encoding as TE
 import qualified Database.Redis as Redis
 import Servant
-import TODO.Common.App
-import TODO.Prelude
+import TODO.Application.Internal
 import Web.Cookie
 
 saveSession :: UUID -> UUID -> App BSL.ByteString

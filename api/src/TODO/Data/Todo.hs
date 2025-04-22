@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module TODO.Type.Todo (Todo (..)) where
+module TODO.Data.Todo (Todo (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import TODO.Prelude

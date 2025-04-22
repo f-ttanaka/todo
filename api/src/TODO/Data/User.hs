@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-module TODO.Type.User
+module TODO.Data.User
   ( User (..),
     UserOnSave (..),
     UserResigter (..),

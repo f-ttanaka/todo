@@ -25,23 +25,27 @@ source-repository head
 
 library
   exposed-modules:
-      TODO.Admin.Index
-      TODO.Application.Run
-      TODO.Application.Server
-      TODO.Common.App
-      TODO.Common.Env.DB
-      TODO.Handler.Admin.User
-      TODO.Handler.Internal
-      TODO.Handler.Session
-      TODO.Handler.Todo
-      TODO.Handler.User
+      TODO.Application.Auth.Session
+      TODO.Application.Handler.Admin.User
+      TODO.Application.Handler.Internal
+      TODO.Application.Handler.Todo
+      TODO.Application.Handler.User
+      TODO.Application.Internal
+      TODO.Application.Server.Admin
+      TODO.Application.Server.Internal
+      TODO.Application.Server.Protected
+      TODO.Application.Server.Run
+      TODO.Application.Server.Unprotected
+      TODO.Data.Todo
+      TODO.Data.User
+      TODO.DB.Migration
+      TODO.DB.Pool
+      TODO.DB.Query.Todo
+      TODO.DB.Query.User
       TODO.Lib.Crypt
+      TODO.Pages.Admin.Index
+      TODO.Pages.Admin.Users
       TODO.Prelude
-      TODO.Query.Common
-      TODO.Query.Todo
-      TODO.Query.User
-      TODO.Type.Todo
-      TODO.Type.User
   other-modules:
       Paths_api
   hs-source-dirs:

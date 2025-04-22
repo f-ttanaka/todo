@@ -1,4 +1,4 @@
-module TODO.Query.User
+module TODO.DB.Query.User
   ( fetchByName,
     fetchAll,
     insert,
@@ -9,9 +9,9 @@ import Data.Profunctor (lmap, rmap)
 import qualified Data.Vector as V
 import Hasql.Statement (Statement)
 import qualified Hasql.TH as TH
+import TODO.Data.User
 import TODO.Lib.Crypt
 import TODO.Prelude
-import TODO.Type.User
 
 -- return user and password hash
 fetchByName :: Statement Text (Maybe (User, Text))

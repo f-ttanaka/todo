@@ -1,21 +1,14 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module TODO.Common.Env.DB
-  ( makeDBConnPool,
-    migrate,
-  )
-where
+module TODO.DB.Pool (makeDBConnPool) where
 
 import Control.Exception.Safe (Handler (..))
 import Control.Retry
 import qualified Hasql.Connection.Setting as Conn
 import qualified Hasql.Connection.Setting.Connection as Conn
-import Hasql.Migration
 import Hasql.Pool (Pool)
 import qualified Hasql.Pool as Pool
 import qualified Hasql.Pool.Config as Pool
-import Hasql.Session (Session)
-import Hasql.Transaction.Sessions
 import System.IO.Error (IOError)
 import TODO.Prelude
 
@@ -48,19 +41,3 @@ handlers =
       putStrLn "IOError while connecting. Retrying..."
       pure True
   ]
-
-createSession :: Pool -> Session a -> IO a
-createSession p ses = do
-  conn <- Pool.use p ses
-  case conn of
-    Right a -> return a
-    Left e -> throw e
-
-migrate :: Pool -> IO ()
-migrate p = do
-  ms <- loadMigrationsFromDirectory "migrations"
-  let msfromScratch = MigrationInitialization : ms
-  results <- mapM (createSession p . transaction Serializable Write . runMigration) msfromScratch
-  case find isJust results of
-    Just (Just err) -> throwString $ show err
-    _ -> putStrLn "All migrations are succeded."

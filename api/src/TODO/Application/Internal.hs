@@ -1,7 +1,8 @@
 {-# LANGUAGE GeneralisedNewtypeDeriving #-}
 
-module TODO.Common.App
-  ( App,
+module TODO.Application.Internal
+  ( module TODO.Prelude,
+    App,
     Env,
     redisConn,
     runApp,
@@ -13,7 +14,8 @@ where
 
 import Database.Redis (Connection, connect, connectHost, defaultConnectInfo)
 import Hasql.Pool (Pool)
-import TODO.Common.Env.DB
+import TODO.DB.Migration
+import TODO.DB.Pool
 import TODO.Prelude
 
 data Env = Env

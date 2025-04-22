@@ -1,4 +1,4 @@
-module TODO.Query.Todo
+module TODO.DB.Query.Todo
   ( fetchAll,
     deleteById,
     insertOne,
@@ -11,8 +11,8 @@ import Data.Profunctor (rmap)
 import qualified Data.Vector as Vec
 import Hasql.Statement (Statement)
 import qualified Hasql.TH as TH
+import TODO.Data.Todo
 import TODO.Prelude
-import TODO.Type.Todo
 
 fetchAll :: Statement UUID [Todo]
 fetchAll = rmap (Vec.toList . fmap decode) query
