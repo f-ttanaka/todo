@@ -1,14 +1,14 @@
 {-# LANGUAGE GeneralisedNewtypeDeriving #-}
 
 module TODO.Application.Internal
-  ( module TODO.Prelude,
-    App,
-    Env,
-    redisConn,
-    runApp,
-    getDbConnPool,
-    getRedisConn,
-    initialEnv,
+  ( module TODO.Prelude
+  , App
+  , Env
+  , redisConn
+  , runApp
+  , getDbConnPool
+  , getRedisConn
+  , initialEnv
   )
 where
 
@@ -17,20 +17,21 @@ import Hasql.Pool (Pool)
 import TODO.DB.Migration
 import TODO.DB.Pool
 import TODO.Prelude
+import TODO.System.Env
 
 data Env = Env
-  { dbConnPool :: Pool,
-    redisConn :: Connection
+  { dbConnPool :: Pool
+  , redisConn :: Connection
   }
 
 newtype App a = App (ReaderT Env IO a)
   deriving
-    ( Functor,
-      Applicative,
-      Monad,
-      MonadIO,
-      MonadThrow,
-      MonadReader Env
+    ( Functor
+    , Applicative
+    , Monad
+    , MonadIO
+    , MonadThrow
+    , MonadReader Env
     )
 
 getDbConnPool :: App Pool
@@ -41,13 +42,15 @@ getRedisConn = redisConn <$> ask
 
 initialEnv :: IO Env
 initialEnv = do
-  pool <- makeDBConnPool
+  e <- getEnv
+  pool <-
+    makeDBConnPool e
   migrate pool
-  rc <- connect $ defaultConnectInfo {connectHost = "redis"}
+  rc <- connect $ defaultConnectInfo {connectHost = redisHost e}
   return $
     Env
-      { dbConnPool = pool,
-        redisConn = rc
+      { dbConnPool = pool
+      , redisConn = rc
       }
 
 runApp :: Env -> App a -> IO a

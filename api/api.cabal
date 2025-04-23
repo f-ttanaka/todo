@@ -43,10 +43,10 @@ library
       TODO.DB.Query.Todo
       TODO.DB.Query.User
       TODO.Lib.Crypt
-      TODO.Lib.Env
       TODO.Pages.Admin.Index
       TODO.Pages.Admin.Users
       TODO.Prelude
+      TODO.System.Env
   other-modules:
       Paths_api
   hs-source-dirs:
@@ -64,6 +64,7 @@ library
     , bcrypt
     , bytestring
     , cookie
+    , envy
     , hasql
     , hasql-migration
     , hasql-pool
@@ -82,6 +83,7 @@ library
     , servant
     , servant-lucid
     , servant-server
+    , string-interpolate
     , text
     , time
     , uuid
@@ -112,6 +114,7 @@ executable api-exe
     , bcrypt
     , bytestring
     , cookie
+    , envy
     , hasql
     , hasql-migration
     , hasql-pool
@@ -130,6 +133,7 @@ executable api-exe
     , servant
     , servant-lucid
     , servant-server
+    , string-interpolate
     , text
     , time
     , uuid
@@ -161,6 +165,7 @@ test-suite api-test
     , bcrypt
     , bytestring
     , cookie
+    , envy
     , hasql
     , hasql-migration
     , hasql-pool
@@ -179,6 +184,7 @@ test-suite api-test
     , servant
     , servant-lucid
     , servant-server
+    , string-interpolate
     , text
     , time
     , uuid

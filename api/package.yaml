@@ -25,6 +25,7 @@ dependencies:
 - bcrypt
 - bytestring
 - cookie
+- envy
 - hasql
 - hasql-pool
 - hasql-th
@@ -43,6 +44,7 @@ dependencies:
 - servant
 - servant-lucid
 - servant-server
+- string-interpolate
 - text
 - time
 - uuid
