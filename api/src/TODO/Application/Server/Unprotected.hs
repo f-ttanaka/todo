@@ -2,8 +2,8 @@
 {-# LANGUAGE TypeOperators #-}
 
 module TODO.Application.Server.Unprotected
-  ( UnprotectedRoutes,
-    unprotectedServer,
+  ( UnprotectedRoutes
+  , unprotectedServer
   )
 where
 
@@ -13,9 +13,11 @@ import TODO.Application.Internal
 import TODO.Data.User
 import Web.Cookie
 
+{- FOURMOLU_DISABLE -}
 type UnprotectedRoutes =
-  "api" :> "login" :> ReqBody '[JSON] UserResigter :> Post '[JSON] (Headers '[Header "Set-Cookie" SetCookie] NoContent)
-    :<|> "api" :> "user" :> ReqBody '[JSON] UserResigter :> Post '[JSON] NoContent
+  "api" :> "login" :> ReqBody '[JSON] UserRegister :> Post '[JSON] (Headers '[Header "Set-Cookie" SetCookie] NoContent)
+  :<|> "api" :> "user" :> ReqBody '[JSON] UserRegister :> Post '[JSON] NoContent
+{- FOURMOLU_ENABLE -}
 
 unprotectedServer :: ServerT UnprotectedRoutes App
 unprotectedServer =

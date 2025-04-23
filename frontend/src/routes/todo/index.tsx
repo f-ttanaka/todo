@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { TodoList } from '@/components/TodoList';
-import { AddTodoForm } from '@/components/AddTodoForm';
-import { TodoSummary } from '@/components/TodoSummary';
+import { TodoList } from '@/components/todo/TodoList';
+import { AddTodoForm } from '@/components/todo/AddTodoForm';
+import { TodoSummary } from '@/components/todo/TodoSummary';
 import {
   useCreateTodo,
   useDeleteTodo,

@@ -4,9 +4,9 @@
 {-# LANGUAGE TypeOperators #-}
 
 module TODO.Application.Server.Protected
-  ( authHandler,
-    protectedServer,
-    ProtectedRoutes,
+  ( authHandler
+  , protectedServer
+  , ProtectedRoutes
   )
 where
 
@@ -27,34 +27,14 @@ authHandler env = mkAuthHandler $ \req -> do
     Nothing -> throwError err401
     Just sid -> getUserInfoFromSession (redisConn env) sid
 
+{- FOURMOLU_DISABLE -}
 type ProtectedRoutes =
-  AuthProtect "session-cookie"
-    :> "api"
-    :> "todo"
-    :> Get '[JSON] [Todo]
-    :<|> AuthProtect "session-cookie"
-    :> "api"
-    :> "todo"
-    :> ReqBody '[JSON] Text
-    :> Post '[JSON] NoContent
-    :<|> AuthProtect "session-cookie"
-    :> "api"
-    :> "todo"
-    :> Capture "uuid" UUID
-    :> Delete '[JSON] Int
-    :<|> AuthProtect "session-cookie"
-    :> "api"
-    :> "todo"
-    :> "title"
-    :> Capture "uuid" UUID
-    :> Capture "title" Text
-    :> Put '[JSON] NoContent
-    :<|> AuthProtect "session-cookie"
-    :> "api"
-    :> "todo"
-    :> "state"
-    :> Capture "uuid" UUID
-    :> Put '[JSON] NoContent
+  AuthProtect "session-cookie" :> "api" :> "todo" :> Get '[JSON] [Todo]
+  :<|> AuthProtect "session-cookie" :> "api" :> "todo" :> ReqBody '[JSON] Text :> Post '[JSON] NoContent
+  :<|> AuthProtect "session-cookie" :> "api" :> "todo" :> Capture "uuid" UUID :> Delete '[JSON] Int
+  :<|> AuthProtect "session-cookie" :> "api" :> "todo" :> "title" :> Capture "uuid" UUID :> Capture "title" Text :> Put '[JSON] NoContent
+  :<|> AuthProtect "session-cookie" :> "api" :> "todo" :> "state" :> Capture "uuid" UUID :> Put '[JSON] NoContent  
+{- FOURMOLU_ENABLE -}
 
 protectedServer :: ServerT ProtectedRoutes App
 protectedServer =
